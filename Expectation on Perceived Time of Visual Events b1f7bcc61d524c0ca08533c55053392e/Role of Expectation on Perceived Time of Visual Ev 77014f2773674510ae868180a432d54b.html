@@ -1,0 +1,676 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Role of Expectation on Perceived Time of Visual Events</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+    margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-interactiveBlue { background-color: rgba(35, 131, 226, .07); }
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-translucentGray { background-color: rgba(255, 255, 255, 0.0375); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="77014f27-7367-4510-ae86-8180a432d54b" class="page sans"><header><h1 class="page-title">Role of Expectation on Perceived Time of Visual Events</h1><p class="page-description"></p><table class="properties"><tbody><tr class="property-row property-row-created_time"><th><span class="icon property-icon"><svg role="graphics-symbol" viewBox="0 0 16 16" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.45);flex-shrink:0" class="typesCreatedAt"><path d="M8 15.126C11.8623 15.126 15.0615 11.9336 15.0615 8.06445C15.0615 4.20215 11.8623 1.00293 7.99316 1.00293C4.13086 1.00293 0.938477 4.20215 0.938477 8.06445C0.938477 11.9336 4.1377 15.126 8 15.126ZM8 13.7383C4.85547 13.7383 2.33301 11.209 2.33301 8.06445C2.33301 4.91992 4.84863 2.39746 7.99316 2.39746C11.1377 2.39746 13.6738 4.91992 13.6738 8.06445C13.6738 11.209 11.1445 13.7383 8 13.7383ZM4.54102 8.91211H7.99316C8.30078 8.91211 8.54004 8.67285 8.54004 8.37207V3.8877C8.54004 3.58691 8.30078 3.34766 7.99316 3.34766C7.69238 3.34766 7.45312 3.58691 7.45312 3.8877V7.83203H4.54102C4.2334 7.83203 4.00098 8.06445 4.00098 8.37207C4.00098 8.67285 4.2334 8.91211 4.54102 8.91211Z"></path></svg></span>Created</th><td><time>@July 2, 2023 1:40 PM</time></td></tr><tr class="property-row property-row-multi_select"><th><span class="icon property-icon"><svg role="graphics-symbol" viewBox="0 0 16 16" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.45);flex-shrink:0" class="typesMultipleSelect"><path d="M1.91602 4.83789C2.44238 4.83789 2.87305 4.40723 2.87305 3.87402C2.87305 3.34766 2.44238 2.91699 1.91602 2.91699C1.38281 2.91699 0.952148 3.34766 0.952148 3.87402C0.952148 4.40723 1.38281 4.83789 1.91602 4.83789ZM5.1084 4.52344H14.3984C14.7607 4.52344 15.0479 4.23633 15.0479 3.87402C15.0479 3.51172 14.7607 3.22461 14.3984 3.22461H5.1084C4.74609 3.22461 4.45898 3.51172 4.45898 3.87402C4.45898 4.23633 4.74609 4.52344 5.1084 4.52344ZM1.91602 9.03516C2.44238 9.03516 2.87305 8.60449 2.87305 8.07129C2.87305 7.54492 2.44238 7.11426 1.91602 7.11426C1.38281 7.11426 0.952148 7.54492 0.952148 8.07129C0.952148 8.60449 1.38281 9.03516 1.91602 9.03516ZM5.1084 8.7207H14.3984C14.7607 8.7207 15.0479 8.43359 15.0479 8.07129C15.0479 7.70898 14.7607 7.42188 14.3984 7.42188H5.1084C4.74609 7.42188 4.45898 7.70898 4.45898 8.07129C4.45898 8.43359 4.74609 8.7207 5.1084 8.7207ZM1.91602 13.2324C2.44238 13.2324 2.87305 12.8018 2.87305 12.2686C2.87305 11.7422 2.44238 11.3115 1.91602 11.3115C1.38281 11.3115 0.952148 11.7422 0.952148 12.2686C0.952148 12.8018 1.38281 13.2324 1.91602 13.2324ZM5.1084 12.918H14.3984C14.7607 12.918 15.0479 12.6309 15.0479 12.2686C15.0479 11.9062 14.7607 11.6191 14.3984 11.6191H5.1084C4.74609 11.6191 4.45898 11.9062 4.45898 12.2686C4.45898 12.6309 4.74609 12.918 5.1084 12.918Z"></path></svg></span>Tags</th><td></td></tr></tbody></table></header><div class="page-body"><p id="bd6f3e0b-7226-46e5-b6e6-0605a9922e18" class="">Omer Faruk Yildiran, Pascal Mamassian</p><p id="9a84971f-c92d-40f7-a815-31ed705b64d8" class="">École Normale Supérieure</p><p id="4ccae595-e7a4-41fd-a93b-231509a96598" class=""><strong>Abstract</strong></p><p id="3a061338-3368-4ddd-9b04-3ef10de9a741" class="">Time perception<em> </em>is an active cognitive process influenced by various factors. This study aimed to examine the impact of expectation on the perceived timing of target events in the presence of distractor events. Two experimental conditions, namely the no-expectation and expectation conditions, were investigated. In the no-expectation condition, participants were asked to report the time of a single stimulus. In contrast, in the expected condition, they were primed to expect a specific stimulus presented in 80% of the trials. The results revealed that the delay between the distractor and target stimuli significantly influenced perceived time errors in both conditions. Participants tended to perceive the target as occurring earlier when the distractor preceded it and later when the distractor followed it. Surprisingly, no significant difference was found between the no-expectation condition and expectation-met trials regarding perceived time. However, an interaction effect was observed, indicating that unmet expectations resulted in higher perceived errors for a specific delay. Analysis of response times showed slightly longer response times in unmet expectation trials than in met expectation trials, suggesting that anticipating upcoming events influenced decision-making processes. These findings suggest that distractor events affect time perception, and while expectation has a subtle influence on human perception of time, the overall impact is not significant. Further research should investigate the non-linear nature of perceived time and explore the effects of different expectation manipulations.</p><p id="558c63ac-dc0a-44e0-85d3-fc761f5b9a73" class=""><strong>Introduction</strong></p><p id="c2e0e6c4-b016-43e9-94bd-1ca5b2dcbc8f" class="">Time perception is a complex and multi-faceted process that remains poorly understood, with a variety of paradigms in need of investigation. This is due to the fact that time perception is not a straightforward process but rather malleable to various factors, and it is subjective in nature. To fully grasp the intricacies of time perception, it is important to remember that subjective perception of time can be obtained through different perceptual modalities, using visual, auditory, or tactile stimuli.</p><p id="89d94d5e-9ac8-4537-aba8-93d14c1b54db" class="">For this reason, one should not think of time perception as an isolated mechanism. There are several factors that can shape our perception of time, including attention, emotion, and expectation. For instance, engaging in an activity that is deemed interesting or enjoyable can cause the time to appear to pass more swiftly in comparison to a tedious or monotonous task (Tse, Intriligator, Rivest &amp; Cavanagh, 2004; Seifried &amp; Ulrich, 2011; Birngruber, Schröter &amp; Ulrich, 2014). Furthermore, emotions can also play a significant role in our perception of time, with individuals in a negative emotional state tending to perceive time as passing more slowly, while those in a positive emotional state perceive time as passing more quickly (Stetson, Fiesta &amp; Eagleman, 2007; Grommet et al., 2011; Gable, Wilhelm &amp; Poole, 2022). When we think about expectation as a way to manipulate attention, it is natural to think that expectation should also play a crucial role in shaping our perception of time; studies have shown that individuals tend to perceive an event as lasting the amount of time they expect it to, regardless of whether it actually lasts longer or shorter (Rhodes &amp; Di Luca, 2016; Matthews &amp; Gheorghiu, 2016; Jones &amp; Botz, 1989).</p><p id="d85f86d2-e596-4642-a3b2-367b6115301a" class="">In the study of time perception, researchers have primarily employed the measurement of the duration of time intervals as a means of investigation. As early as 1860, Gustav Fechner proposed that the perception of stimuli would be prolonged if presented more frequently. Later studies on duration perception have delved into the ways in which various factors can impact our perception of the duration of events. One key area of focus has been the presence of distractor events. A study by Burr, Rocca and Morrone (2013) found that the presence of a distractor event can significantly alter the perceived duration of a test stimulus. In their experiment, participants were asked to judge the duration of a test interval that was presented between two distractor intervals. The researchers found that short distractors caused the test interval to appear shorter, while longer distractors had the opposite effect. This effect was most pronounced for very short reference durations (≤100ms) and gradually diminished for longer durations, eventually reaching no effect for durations greater than 500ms. Other studies have also reported that distractors can affect the perceived duration of subsequent events, a phenomenon known as the attraction toward the distractor effect (Burr et al., 2013; Sawai, Sato, &amp; Aihara, 2012). The cognitive mechanism underlying this effect is often attributed to a tendency to regularize the sequence of the three consequent event in time that is constituting two attended one irrelevant(‘distractor’) intervals (Shi, Church, &amp; Meck, 2013; Jazayeri &amp; Shadlen, 2010; Hartcher, Di Luca, &amp; Ernst, 2014).</p><p id="001975eb-423b-4cdf-8ad5-308db1615d1a" class="">In contrast to the prevalence of studies on duration perception, there are relatively fewer investigations into the perceived time of events. A recent study by Jovanovic and Mamassian (2020) aimed to expand upon previous findings on temporal effects on duration perception by examining the impact on the moment at which an event is perceived. The study revealed that the perceived time of an event is consistently influenced by other events that occur in close temporal proximity. However, the nature of this effect varies depending on the level of attention given to each event.</p><p id="dc126fd3-3ee5-446b-b852-c29afcba7304" class="">In their study, participants got familiarized with a specific time interval using a clock whose hand made a single full revolution to indicate the duration of the interval. During the experimental trials, the rotating hand of the clock was removed, and two disks were flashed sequentially during the interval. One of the disks was the target and the other a distractor. At the end of the trial, participants were asked to indicate when they perceived the target by placing the hand of the clock at the location where it would have been if it had been shown during the interval. In separate experiments, which of the two disks was the target was either revealed at the end of the trial, or a cue about its color was given before the trial, or a cue was given about the order of the disks (target presented first or second). The authors found that when the target is unknown during the trial, so participants attended equally to each stimulus, target perception time is attracted by the distractor. On the other hand, when the target is cued by color beforehand, perceived time error increased. This study showed that the moment when a target is perceived is gradually biased by the presentation time of other events if the target event is not known before response phase. However, in the second experiment, when they “pre-cued” the target before the trial, the authors found negative temporal errors, such that participants perceived the target much earlier than their presentation time. This kind of anticipation bias to the distractor in “pre-cued by color” condition gave us the motivation to investigate the perceived moment of events in the context of expectation.</p><p id="bfcab9c8-9831-4d09-8b5e-356289f4c6bf" class="">Examining the relationship between expectation and its impact on perceived time is a relatively novel and under-explored area within psychology and neuroscience. While it has been established that expectation can augment neural processing speed by leveraging prior knowledge for cognitive functions (de Lange, Heilbron, &amp; Kok, 2018; Gau &amp; Noppeney, 2016), the precise mechanisms by which expectation specifically influences our perception of time remains an area that requires further investigation.</p><p id="cbdd09b3-8c44-465d-b9cc-9f7c1675b723" class="">Expectation, in general, increases neural processing speed, presumably because our brain is using expectation as prior information. Past studies found that expectations have a significant impact on how humans make perceptual decisions (de Lange et al., 2018; Summerfield &amp; de Lange, 2014). The literature especially shows that in a cued paradigm, the validly expected stimulus is detected or located more quickly and accurately than the unexpected stimulus (Kok, Jehee, &amp; De Lange, 2012). So valid expectations facilitate perceptual choices and shape our perception of noisy stimuli. On the other hand, expectations do not change the system’s internal parameters. The findings indicate that when expectations are not fulfilled, sensory processes are delayed (Urgen &amp; Boyaci, 2019).</p><p id="f8446455-d159-44e3-b925-619cc47321f4" class="">Drawing upon the existing literature on expectation, attention, and time perception, our study aims at investigating how expected and unexpected scenarios shape our perception of the occurrence of an event within a given time interval. Our focus will be on the retrospective timing of events, specifically within a very short temporal interval. To achieve this, we will present two independent events in succession and employ a time reproduction task in which participants are asked to estimate the timing of one of these events which will be cued by the color of this stimuli. We hypothesize that when there is an expectation about the upcoming stimulus, this will result in an earlier perception of the onset of the target stimulus in comparison to the actual presentation time. In contrast, for trials in which expectation is unmet, we expect participants to perceive the target stimulus later than the actual presentation time, and the error variability to be greater. More precisely, we suppose that if the target is presented earlier than the distractor, there will be relatively less error compared to a trial where the distractor was presented first. This is because if the target is presented first, we suppose that target time will get attracted towards distractor’s time, but this attraction cannot be enough to eliminate the error or make the error positive. On the other hand, if we ask for the perceived time of an unexpected target, sensory processes will be delayed, participants will be less attentive when the target is shown, and so we expect that they will have a larger temporal error of perceived time. In other words, participants should perceive the stimulus time much later than actual presentation time when the target is unexpected.</p><p id="95007a3f-e827-4fd5-8d09-2060cfec4856" class=""><strong>Methods</strong></p><p id="62a1c9c1-dad9-4db2-a040-7aa445774933" class="">The methods of our study are similar to the ones of the previous research of Jovanovic and Mamassian (2020). We have re-written the experiment in Python PsychoPy (see Supplementary for experiment code) and added different expectation conditions. These expectation conditions were such that one specific colour cue being assigned as a target had a higher probability than the other colour cue. Also, we made slight changes about timing stimuli and procedure (see Procedure section for more detail).</p><p id="e34a5850-da4c-43cc-a35c-f17c6f15baee" class=""><strong>Participants</strong></p><p id="ea7a0afd-7ab7-43e7-9ea5-9675cba719e7" class="">A sample size of 15 people with normal or corrected-to-normal vision was enlisted for the data collection via the RISC mailing list. English language proficiency was required for participants to comprehend the assignment completely. Participants gave their informed consent before the experiment and were provided with a debriefing after the experiment. They received a compensation fee (10 Euros per hour and in total they took ~20 Euros) for participating in the experiment. For the sample size rationale, we made a simulated power analysis using pilot data with Linear Mixed Model analysis. We obtained a 0.36 effect size for the delay between distractor and target and .80 power for 15 participants.</p><p id="6a553e9d-47f5-4290-99fc-439fb9630529" class="">The power analysis revealed that a sample size of 5 participants yielded a power of 22%, while increasing the sample size to 10, 15, and 20 participants resulted in powers of 62%, 81%, and 91% respectively. These power calculations were based on a 95% confidence interval and accounted for the largest number of participant. The sample sizes determined through power analysis allowed us to achieve sufficient statistical power to detect meaningful effects and draw reliable conclusions from our data. All of the data collection procedures and method are pre-registered, and, power analysis with code can be found online (see Supplementary).</p><p id="e0a1782a-120b-43e1-836c-fe27d8a42e7f" class=""><strong>Stimuli</strong></p><p id="50bfc839-0a61-4786-9d30-47e6e5afa386" class="">As stimuli, we used two stationary <strong>disks,</strong> which were flashed in the center of the screen one after the other. These disks were either <strong>green</strong> or <strong>red</strong> with a diameter of 2 deg of visual angle (dva). As a task, at the end of each trial, participants are asked to report the onset time of one of these disks. For this reason, in each trial, one of the disks (red or green) is randomly assigned as <strong>target</strong> stimulus and the other as <strong>distractor</strong> stimulus.</p><p id="e75553c0-aab8-4057-8d36-65073c032e62" class="">To reference one revolution of time-interval, participants were shown a <strong>clock</strong>, whose hand made a full revolution (360 degrees) in 2 seconds (Figure 1). The clock had only one <strong>hand</strong>, and this hand only appeared during the familiarization phase. During the actual experimental trials, the outer ring of the clock stayed, and in the response phase, <strong>a time indicator</strong> was presented to the participants that they had to place on the rim of the clock to indicate their estimated target time.</p><figure id="703ba3ce-86a0-4be3-82e8-5cc5483eb57f" class="image"><a href="Role%20of%20Expectation%20on%20Perceived%20Time%20of%20Visual%20Ev%2077014f2773674510ae868180a432d54b/image1.png"><img style="width:700px" src="Role%20of%20Expectation%20on%20Perceived%20Time%20of%20Visual%20Ev%2077014f2773674510ae868180a432d54b/image1.png"/></a></figure><p id="a71e06ac-7e68-4739-a00b-35c16a2a78fb" class="">There was a blank circle with a white border positioned in the center of the screen. This circle had the same diameter as the stimuli and served as a <strong>placeholder</strong> in the absence of stimuli. We also used a 33-ms <strong>auditory cue</strong> at the beginning and end of each trial to give extra information about the time-interval by deliberately indicating the start and end of each trial interval. Between the trials, on a blank gray screen, there was only a black cross symbol in the center that was used as a <strong>fixation point.</strong></p><figure id="f5fa7417-058d-40a8-95d1-f7ccd3c59077" class="image"><a href="Role%20of%20Expectation%20on%20Perceived%20Time%20of%20Visual%20Ev%2077014f2773674510ae868180a432d54b/image2.png"><img style="width:700px" src="Role%20of%20Expectation%20on%20Perceived%20Time%20of%20Visual%20Ev%2077014f2773674510ae868180a432d54b/image2.png"/></a></figure><p id="0e1188b1-01a1-4ce3-a55c-7fc1a1d4e545" class=""><strong>Procedure</strong></p><p id="daf8f648-500d-4019-9e5c-fa9f2887f913" class="">At the beginning of the experiment, there was a familiarization phase consisting of 20 revolutions of the clock’s hand movement for 2 seconds. The familiarization phase was also shown before each new block with 4 loops.</p><figure id="7872ba2c-e478-4aa7-b713-7f1b2a76a061" class="image"><a href="Role%20of%20Expectation%20on%20Perceived%20Time%20of%20Visual%20Ev%2077014f2773674510ae868180a432d54b/image4.png"><img style="width:700px" src="Role%20of%20Expectation%20on%20Perceived%20Time%20of%20Visual%20Ev%2077014f2773674510ae868180a432d54b/image4.png"/></a></figure><p id="ad806ac2-ca3d-42bc-95c9-cf5a90694c5b" class="">After the fixation point, every trial started with an auditory cue, and the placeholder and the ring of the clock became visible (Figure 2). Then there was a variable duration until the onset of the first stimuli, which would later be defined as either</p><p id="39f5dbfb-e681-4415-bc09-b70f3f89b9c7" class=""><strong>target or Distractor.</strong></p><p id="157720e4-d497-4e9e-ada8-1df43ed4cad1" class="">It stayed on screen for 33ms, it could be red or green, but for simplicity in description, let us say it is red for now. In close temporal proximity, in predefined 10 levels between -300ms, and +300ms, the other stimulus appeared (green) for 33-ms. Then the placeholder replaced the last stimulus, until the end of the trial when an auditory cue was presented, and the placeholder was replaced by the fixation point.</p><p id="1a98a1b4-efc0-44c9-9dbd-b7fa3c534470" class="">At the end of the trial, in the center of the screen, a cue circle (red/green) was shown to inform the participant which stimulus was the <strong>Target</strong>, the other color being <em>de facto</em> the <strong>Distractor.</strong></p><p id="06576f89-7ac3-4f62-9c78-f36e012bd1a5" class="">After the participants were informed which color was the target, the <strong>time indicator</strong> was presented at a random initial position on the ring. Participants were asked to move the cursor to indicate the perceived moment using a left-click of the mouse, and until releasing their finger, they had still a chance to change their answer by moving the mouse.</p><p id="a842e1d3-87ab-40b3-91fa-c3a20d1963cf" class="">Each participant initially had a training with single stimulus (i.e., no distractor) in which they also received feedback about the correct timing of stimuli. This feedback was shown on the circle with a color of its own. Then similarly to the single stimulus training session, participants performed a baseline condition in which there was no distractor stimulus presented, and they had to estimate the onset time of that single stimulus. For this baseline condition, there were 40 trials with no feedback. Subsequently, there was a training session with two stimuli (target and distractor discs) for 40 trials without any feedback. This training part was the same as the actual experiment but with relatively easier trials since the delay between distractor and target was fixed to either -500ms or +500ms.</p><p id="9238f965-6dae-4176-99f0-f692671abd72" class="">After these training and baseline sessions, the actual test trials began. The experiment was be divided into two conditions that we will call “expectation condition” and “no-expectation condition” (Figure 3). Each experimental condition was blocked and took approximately 1 hour, with 500 trials for each condition. Each trial lasted approximately 4s (2s trial time-interval, ~1s response duration, 1s inter trial interval) and there were 20 blocks (with a small break every 25 trials) for each condition. The order of experimental conditions was counterbalanced between participants. In the no-expectation condition, the probability of the target (time of onset of a disk) was equal for each color. In the expectation condition, 80% of the trials were such that the target was of one particular color. The presentation of the chosen color cue in the expectation condition (red/green) was also counterbalanced between participants. Before the expectation condition, participants were informed that the probability of the target was higher for one of the colors, but we did not tell which color was more common.</p><p id="b033e7b7-878e-40b6-9da0-2f7de3872970" class=""><strong>Results</strong></p><p id="90d7aa2b-e73e-4bc5-9b02-ecb5c7f4f3ff" class=""><strong>1. Baseline Condition: Single stimuli condition</strong></p><p id="acee2da2-6e4d-4b84-8ec7-56fa39960e70" class="">To establish the relationship between perceived time and actual time on the single stimulus trials, we employed a sinusoidal model to fit the data so as to generate corrected versions of the target and distractor time for each trial in the actual experimental trials. The equation for perceived time in single stimuli condition is as follows:</p><figure id="7689afa5-d646-4fc4-8fe0-6bcc723cfa2a" class="equation"><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.2/katex.min.css')</style><div class="equation-container"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>P</mi><mi>e</mi><mi>r</mi><mi>c</mi><mi>e</mi><mi>i</mi><mi>v</mi><mi>e</mi><mi>d</mi><mtext>  </mtext><mi>T</mi><mi>i</mi><mi>m</mi><mi>e</mi><mtext> </mtext><mo>=</mo><mtext> </mtext><mi>α</mi><mtext> </mtext><mo>∗</mo><mtext> </mtext><mi>s</mi><mi>i</mi><mi>n</mi><mo stretchy="false">(</mo><mi>π</mi><mtext> </mtext><mo>∗</mo><msub><mi>t</mi><mi>t</mi></msub><mo stretchy="false">)</mo><mtext> </mtext><mo>+</mo><mtext> </mtext><mi>β</mi><mtext> </mtext><mo>⋅</mo><mtext> </mtext><mi>x</mi></mrow><annotation encoding="application/x-tex">Perceived  Time = α * sin(π *t_t) + β ⋅ x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="mord mathnormal">erce</span><span class="mord mathnormal">i</span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="mord mathnormal">e</span><span class="mord mathnormal">d</span><span class="mord">  </span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mord mathnormal">im</span><span class="mord mathnormal">e</span><span class="mord"> </span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.46528em;vertical-align:0em;"></span><span class="mord"> </span><span class="mord mathnormal" style="margin-right:0.0037em;">α</span><span class="mord"> </span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"> </span><span class="mord mathnormal">s</span><span class="mord mathnormal">in</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.03588em;">π</span><span class="mord"> </span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mord"> </span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord"> </span><span class="mord mathnormal" style="margin-right:0.05278em;">β</span><span class="mord"> </span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord"> </span><span class="mord mathnormal">x</span></span></span></span></span></div></figure><figure id="f3ecd446-ebd7-4cbf-b636-e4cb89b2c97a" class="image"><a href="Role%20of%20Expectation%20on%20Perceived%20Time%20of%20Visual%20Ev%2077014f2773674510ae868180a432d54b/image7.png"><img style="width:700px" src="Role%20of%20Expectation%20on%20Perceived%20Time%20of%20Visual%20Ev%2077014f2773674510ae868180a432d54b/image7.png"/></a></figure><p id="c82bd95a-2a45-4d8e-9322-c0171df377a8" class="">Here</p><p id="0400b15a-9e8d-4f88-a449-518365b4a966" class=""><strong>α </strong>parameter controls the amplitude of sine function</p><p id="2aaa38b9-7725-4cd6-9c12-4b58fb0dc1de" class=""><strong>β </strong>rotates the fit and <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.2/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>t</mi><mi>t</mi></msub></mrow><annotation encoding="application/x-tex">t_t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.76508em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span></p><p id="3f52a6f5-1838-40b9-bb19-6366e1f4cbed" class="">is the presentation time of the stimulus. This correction was necessary to account for the non-linear relationship between perceived time and actual time. The plot depicting perceived time against actual time for the single stimulus trials revealed a systematic bias in participants’ judgments (see Figure 4). Specifically, participants tended to be biased near the beginning and the end of the 2-second interval. It became evident that this bias needed to be addressed to accurately analyze the temporal errors in the experimental trials. By applying the correction to the actual target and distractor times, we aimed to eliminate this bias and obtain more precise measurements of temporal errors.</p><ol type="1" id="b3f2c236-50f6-469d-8d28-fa0c9da47778" class="numbered-list" start="1"><li><strong>No-Expectation Condition: Effect of time between stimuli</strong></li></ol><p id="b5e2446e-9a67-413f-92c8-c4d5075054e8" class="">To replicate the original study, we first ran the experiment without implicit priming of the participants. In this experiment, the participants were asked to report the time of one of the stimuli, and the probability of this target stimulus was 0.5 to be of a particular colour. Here we wanted to replicate the results of the effect of the delay between distractor and target on the perceived moment of the target.</p><p id="88a78fe6-09fc-486b-9afa-5844664628e1" class="">We calculated the temporal error as the difference between the reported (estimated) and actual (physical) presentation timings to determine the accuracy of the target’s perceived time. At first, we made a simple Linear Mixed Model (LMM) with the temporal error as the dependent variable, and delay between distractor and target as the fixed effect, and we used participants as the random effect. LMM revealed a significant effect of delay (in seconds) on perceived time errors of the targets in the No-expectation condition. The estimated coefficient for the delay was 0.310 (SE = 0.015, t = 20.5, <strong>p &lt; .001</strong>), indicating a highly significant effect. This means that as delay increases, participants had larger Perceived Time Errors. More precisely, if the distractor was presented earlier than the target, participants reported the target earlier than it actually was, and if the distractor was presented after the target, participants reported the target later than it was. This is in line with the results of the original study. These results are clearly visible in Figure 5, where the temporal error is plotted against the delay between distractor and target stimuli. To fit the temporal errors, we tried different functions and decided to use a derivative of Gaussian applied to the delay between distractor and target. This function has the following equation for the temporal error:</p><p id="b3b210bc-bd49-4c4a-8f47-ebdee78e1791" class="">$$TemporalError = f\left( x \right) = t_{t}^{&#x27;} - t_{t} = \alpha \cdot \frac{\left( t_{d} - t_{t} \right)}{\sigma} \cdot \exp\left\lbrack - \frac{\left( t_{d} - t_{t} \right)^{2}}{\sigma^{2}} \right\rbrack$$</p><figure id="52f44b6c-05f5-47b6-8c29-f56ba0fd9c90" class="image"><a href="Role%20of%20Expectation%20on%20Perceived%20Time%20of%20Visual%20Ev%2077014f2773674510ae868180a432d54b/image9.png"><img style="width:700px" src="Role%20of%20Expectation%20on%20Perceived%20Time%20of%20Visual%20Ev%2077014f2773674510ae868180a432d54b/image9.png"/></a></figure><p id="73f0325b-7199-4ef7-9882-74d5751bfa7f" class="">In this equation,</p><p id="f9f63b4c-fc7d-440c-8dc5-f3fcab8d3249" class=""><strong>α</strong></p><p id="fc566aea-6ce7-4566-bb4d-cab162a750ba" class="">represents the error constant which handles the height of the fit</p><p id="39497d99-10b1-4e36-9c60-ed4337093b62" class=""><strong>,</strong></p><p id="ecee437b-b452-4ecd-a43f-045f0b343c54" class=""><strong>t</strong></p><p id="29ede42a-474b-453a-8092-619b5e824621" class=""><strong>t</strong></p><p id="a33620dc-dcc0-494b-8eb0-e814c694dd36" class="">denotes the actual target onset time,</p><p id="96ab2cde-caa1-4eff-b8de-31abc15206b0" class=""><strong>t</strong></p><p id="63adf1af-e624-46ee-b0f4-ebf8204ebdb6" class=""><strong>t</strong></p><p id="b3548d20-835e-4772-83f5-7d65c842f578" class=""><strong>′</strong></p><p id="e26d55e2-a9e1-48da-a9d5-96da9ac4c05a" class="">represents the perceived target onset time,</p><p id="f66efb13-b060-4e68-b14f-a6fad1d63436" class=""><strong>t</strong></p><p id="29cdb0e6-77bf-4b6e-b0b6-04c45bdc083d" class=""><strong>d</strong></p><p id="ba6bae30-715f-44d7-a36f-d9498fd1e029" class="">represents the actual distractor onset time, and</p><p id="a4fdd78c-cc39-4280-a5ab-810c0bd6ad79" class=""><strong>σ</strong></p><p id="6da6eab0-8883-4534-a500-9a5d8d475d6f" class="">is the parameter that controls the width of the fit. Using this model, we further investigated the effect of delay on perceived time error. We used delay and the interaction between delay and “derivative of Gaussian function of delay” as fixed effects and participants as random effects.</p><p id="92b7a370-15ba-44ce-b7b6-d03fd83e7fd7" class="">The analysis results showed that delay had a significant effect on Temporal Error (β = 0.310, SE = 0.0151, t = 20.5<strong>, p &lt; .0001</strong>). Moreover, the shape of the delay distribution, as captured by the derivative Gaussian function, significantly affected Temporal Error in a positive way (β = 0.196, SE = 0.094, t = 2.08, <strong>p = 0.0371</strong>). These results suggest that both the magnitude of the Distractor-Target Delay and the shape of the delay distribution play important roles in influencing individuals’ perception of time.</p><ol type="1" id="86806206-536f-4d6a-9f2c-c187ae21841e" class="numbered-list" start="1"><li><strong>When there is an expectation towards a certain colour</strong></li></ol><p id="361634d9-0da2-497e-8598-a37f9c5a2967" class="">In the second condition of the experiment, we aimed to investigate the effects of inducing prior cues towards a certain colour on perceived time. Based on previous findings on prior entry effects, we initially predicted that in expected trials (i.e., when the expectation is met), participants would perceive the stimuli as occurring earlier than the actual presentation time. However, contrary to our initial prediction, the results showed a similar trend in expected trials as in the no-expectation condition (Figure 6). Interestingly, when comparing trials where the expectation was met versus unmet, we observed that participants perceived the target later in unmet trials when the target is presented before the distractor (right hand side of the plot). Reversely, when the distractor is presented before the target (left hand side of the plot), participants perceive the target earlier in the unmet trials than the met trials. To analyze these findings, we employed the same LMM as the one we used in the no-expectation condition, but this time we needed to add a congruency (expectation met/unmet) factor to the model so as to also investigate the effect of expectation congruency.</p><p id="b9300971-106a-40f5-8e43-99923fcbdb5c" class="">The LMM revealed that delay had a significant effect on perceived temporal error <strong>(β = 0.3048, SE = 0.0176, t = 17.332, p &lt; 0.001</strong>), indicating that an increase in the delay between distractor and target stimuli was associated with a greater temporal error. The shape of the delay distribution showed a non-significant effect on perceived temporal error (β = 0.1475, SE = 0.109, t = 1.352, p = 0.1763). When considering the congruency of the expectation (expectation met vs. unmet), we found a <strong>significant interaction between delay and congruency on perceived temporal erro</strong>r (<strong>β = 0.07857, SE = 0.03877, t = 2.027</strong>, <strong>p = 0.0427</strong>), indicating that the effect of the delay on temporal error differed between expectation met and unmet trials. These results suggest that inducing prior cues towards a certain colour did not significantly alter the pattern of perceived temporal error. However, when the expectation was unmet, the target is more biased by the distractor. The significant interaction between delay and congruency indicates that the effect of the distractor-target delay on temporal error differs depending on whether the expectation was met or unmet. In Figure 7, we plotted the temporal error against the delay between the distractor and target stimuli for the expectation met and unmet trials. One can see that the temporal error is higher in the unmet expectation trials compared to the met expectation trials.</p><figure id="1f14e8c3-abdb-4b38-b834-afdd6fc1d4a3" class="image"><a href="Role%20of%20Expectation%20on%20Perceived%20Time%20of%20Visual%20Ev%2077014f2773674510ae868180a432d54b/image11.png"><img style="width:700px" src="Role%20of%20Expectation%20on%20Perceived%20Time%20of%20Visual%20Ev%2077014f2773674510ae868180a432d54b/image11.png"/></a></figure><p id="01024519-92cf-4b16-8333-2d9fe23041f1" class="">Upon visual inspection, it is evident that the model fits the data more accurately for the met expectation condition. However, one must remember that, by definition, there are four times fewer unmet trials than met trials. When comparing the met and unmet expectation conditions, an interesting pattern emerges. In the unmet trials, where the distractor is presented before the target, participants exhibited an even greater bias in perceiving the onset time of the target. This bias resulted in larger negative temporal errors, indicating that participants perceived the target time even earlier than its actual occurrence, as compared to the met trials.This observation suggests that participants may perceive the distractor as the target due to its colour as they were primed for that colour to be the target. So when participants need to report the perceived time, they are affected by the time of the stimulus that captured more their attention (the distractor). In contrast, when the distractor is presented later than target, the magnitude of increase in temporal error is higher than in met trials.</p><ol type="1" id="d2022c96-bb77-41fc-bb0f-0dd147f6c440" class="numbered-list" start="1"><li><strong>Detailed investigation on each of the delay bins</strong></li></ol><p id="a56deb7b-0c1d-41f7-ac53-cf85bf86f2a2" class="">In order to gain a deeper understanding of the relationship between perceived time and different delay conditions, a more detailed investigation was conducted. Density distributions were plotted for each delay bin, representing the met and unmet trials (Figure 7). This analysis aimed to uncover any potential differences in perceived time between the two conditions. The density plots provided a visual representation of the distribution of perceived time for each delay bin. The plots did not reveal any obvious distinct patterns. To quantify the results, a series of independent t-tests were conducted to compare the means of perceived time between these conditions at each delay point. The results are summarized as follows:</p><figure id="bae6eab1-f8de-40b6-8089-edf40bc260f1" class="image"><a href="Role%20of%20Expectation%20on%20Perceived%20Time%20of%20Visual%20Ev%2077014f2773674510ae868180a432d54b/image13.png"><img style="width:700px" src="Role%20of%20Expectation%20on%20Perceived%20Time%20of%20Visual%20Ev%2077014f2773674510ae868180a432d54b/image13.png"/></a></figure><p id="1eea01da-9f03-4e91-bad5-172eee246413" class="">There were no statistically significant differences in perceived temporal error between the met and unmet trials at most delay points. However, a significant difference was observed at a delay of 0.3s, where the mean perceived time for the met tirals (0.076s) was significantly lower than that for the unmet trials (0.132 s).</p><ol type="1" id="631d9c5a-7834-4f72-aa08-c63317d4da63" class="numbered-list" start="1"><li><strong>Response Time and Reaction Times</strong></li></ol><p id="b022588b-4552-40ed-bf48-e7ab6356aecd" class="">Response time and reaction time were examined separately as distinct measures in our experiment. Reaction time was defined as the duration between the beginning of the response phase and the participant’s initiation of a movement, indicated by the movement of the mouse. The response phase began when the trial ended, and the response pointer and cue appeared on the screen. The reaction time was recorded when the participant started moving the mouse and reached a minimum movement threshold of at least 1 degree of visual angle, indicating that the participant moved the mouse away from the center of the cue disk and the response pointer began to move. On the other hand, response time was measured as the time that elapsed between the participant’s reaction time and their final response that they gave by the mouse click-release. This measure provided insights into the time taken from the participant’s initial movement to their final response.</p><p id="9e57a85a-7b96-4ec1-92cc-805a3ba670d9" class="">To investigate the effect of expectation on these measures, we conducted t-tests to compare the reaction times and response times between expectation-met and unmet trials. The results of the t-test revealed that there was <strong>no significant difference in reaction times</strong> between the expectation-met and unmet trials. However, a significant difference was found in response times between these trials. The t-statistic was -2.54, with a p-value of 0.011, suggesting that the mean <strong>response times differed significantly between the expectation met and unmet trials</strong>.</p><p id="a41f0f11-84a2-46b9-b3be-039d42046ec2" class="">Further examination of the response time data revealed that the median response time for the expectation-met trials was 0.975 seconds, while for the expectation-unmet trials, it was 1.017 seconds. This difference in response times suggests that participants took slightly longer to respond in the unmet trials compared to the met trials (Figure 8).</p><figure id="49a5d7b9-b709-425f-8a64-8a89120ab4e9" class="image"><a href="Role%20of%20Expectation%20on%20Perceived%20Time%20of%20Visual%20Ev%2077014f2773674510ae868180a432d54b/image15.png"><img style="width:624px" src="Role%20of%20Expectation%20on%20Perceived%20Time%20of%20Visual%20Ev%2077014f2773674510ae868180a432d54b/image15.png"/></a></figure><p id="71cc4a10-63f3-4060-92d3-b65bb2f1633e" class="">To visually depict our findings, we created density plots for both reaction times and response times. Figure 7 illustrates the density distributions of the response times, revealing a slightly higher distribution of response times in the expectation unmet trials compared to the expectation met trials. Additionally, we used an</p><p id="3e0d8f16-be29-4ce6-bdc7-2f948f158ef2" class=""><strong>ex-Gaussian fit</strong></p><p id="5463c576-053d-4085-85f6-7df219b7fcd7" class="">to model the reaction times. This distribution allowed us to explore the underlying components of the reaction time data, taking into account both normal and exponential components (Hohle, 1965). These findings highlight the influence of expectation on response times and suggest that the participants’ anticipation of the upcoming event had an impact on their decisive processes, and this led to differences in response times.</p><p id="a018c92d-da50-41b3-b2ec-8743519a308b" class=""><strong>Discussion</strong></p><p id="a7948855-177d-4b88-abc9-5d40a44a8508" class="">This study aimed to investigate the effects of distractor and expectation on perceived temporal errors of a briefly presented target. The results yield valuable insights into the factors influencing individuals’ perception of time and shed light on the role of expectation in temporal processing.</p><p id="eec06d06-39ca-423c-9549-32015264b0b1" class="">In the No-Expectation Condition, we successfully replicated the findings of the original study of Jovanovic &amp; Mamassian (2020), demonstrating a significant effect of the delay between distractor and target stimuli on perceived time of the target. Consistent with previous research, our findings indicate that deviations from zero delay led to increased perceived time errors, both when the distractor preceded and followed the target. When the distractor was presented before the target, participants tended to report the target as occurring earlier than it actually did, and vice versa. This phenomenon is commonly referred to as the attraction-towards distractor effect (Burr et al., 2013; Sawai, Sato, &amp; Aihara, 2012).</p><p id="0d0d86c0-fc77-467c-a5e5-12af3a6c845f" class="">Furthermore, the analysis confirmed that both the delay and the shape of the delay distribution impact perceived time of events. The effect of delay is not just linear; instead, it diminishes for large delays, and presumably vanishes when the distractor is temporally very far from the target.</p><p id="358a7643-cdb8-4371-b9e9-8d23fdf56c13" class="">The second condition of the experiment focused on examining the effects of inducing expectation through priming towards a specific color on perceived time. Contrary to our initial prediction, the results did not support the hypothesis that participants would perceive stimuli as occurring earlier when they had an expectation towards a specific color. Instead, we observed a very similar trend in expected trials as in the no-expectation condition. These results contradict previous literature that suggests the prior-entry effect, which posits that attended events are perceived earlier (Titchener, 1980), and they are in apparent conflict with the findings of a previous experiment by Jovanovic and Mamassian (2020) that utilized the same procedure and stimuli, but with an explicit pre-cueing of the target before the trial. It is possible that these differences result from the presentation of an implicit cue (as we did here by manipulating the probability of occurrence of a certain colour), or the validity of the cue (we used an 80% validity, whereas it was 100% in Jovanovic &amp; Mamassian, 2020).</p><p id="9a8998da-5549-4108-8eb5-c76b73226a5c" class="">Interestingly, when comparing trials where the expectation was met versus unmet, we found that participants perceived the target stimuli as occurring later in unmet trials compared to met trials, where the target was presented before the distractor. This observation aligns with previous literature suggesting that unmet expectations can delay sensory processes (Urgen &amp; Boyaci, 2019; Kok, Jehee, &amp; De Lange, 2012).</p><p id="2d093bac-86f8-445a-8e61-d43e8ab374cb" class="">These findings suggest that manipulating the expectation towards a specific color did not significantly alter the pattern of perceived temporal errors. However, an interaction effect was observed, indicating that for a specific delay (0.3s, p=.011), perceived errors were higher for the unmet expectation condition. Although this effect was not statistically significant, it suggests that when the expectation was unmet and the distractor was displayed first, participants exhibited a tendency to perceive the target stimuli as occurring before, and vice versa when the distractor was displayed later than the target. This highlights the influence of unmet expectations on temporal judgments and suggests that participants’ attention may be more influenced by stimuli that capture their attention, such as distractors.</p><p id="589f935c-5f3e-47cf-8da0-4eca0ad11edd" class="">Additionally, the analysis of response times provided further insights into the influence of expectations on participants’ performance. Although there was no significant difference in reaction times between expectation-met and unmet trials, the analysis revealed a significant difference in response times. Participants took slightly longer to respond in the unmet trials compared to the met trials. This finding suggests that participants’ anticipation of an upcoming event had an impact on their decision-making processes, leading to slightly delayed responses in unmet expectation trials.</p><p id="7b27b043-b3fb-4e84-9dc9-869eee477993" class="">In summary, the study confirms the effect of other temporal events (delays) on time perception. Additionally, a slight difference between expected and unexpected trials was found. The limited disparity between the met and unmet conditions may be attributed to our linear conceptualization of time, unaffected by expectation. To address this limitation in future research, it may be necessary to explore the nonlinear nature of perceived time response. Furthermore, in the “expectation” condition, our aim was to prompt participants to predict the target stimulus by manipulating the color ratio of both the target and distractor stimuli. This manipulation was intended to create an expectation regarding the timing of the target stimulus indirectly. However, while our intention was to prime about the “time” of target, it is possible that participants developed an expectation, just based on the “color” aspect. Consequently, the stimulus they anticipated might not have influenced their perception about target onset time of the target time, even though it led to deformations and larger biases on unexpected trials.</p><p id="4b650b69-7382-4df3-bdbe-5469371d5a45" class="">In conclusion, these findings provide valuable insights into how expectations shape our perception of the timing of environmental stimuli and how they are influenced by temporally proximate stimuli. However, it is important to note that this study only investigates perceived moment relative to other events. Further research should be conducted to examine the effect of expectation on the absolute timing of exclusive events, independent of other events.</p><p id="b25f16b9-5db6-4902-bf96-ca384f46dd8a" class=""><strong>Acknowledgements</strong></p><p id="4c0cea79-44dc-4de1-b233-334075014480" class="">Thanks very much to Ljubica Jovanovic for providing detailed explanations on their method, and precious comments on analysis.</p><p id="bf510e16-8f72-4396-bf50-72508dd6cef0" class=""><strong>Supplementary material</strong></p><p id="e33f177f-8a1c-4999-bf40-1dd353f60419" class="">Pre-registration can be found in this link:<a href="https://osf.io/5rxns">https://osf.io/5rxns</a></p><p id="7a720c1c-30ab-466e-adec-271aed39770a" class="">All of the data analysis procedures codes, and experiment code can be found in here: <a href="https://github.com/omeryildiran/Expectation_Time">omeryildiran/Expectation_Time: Omer Yildiran and Pascal Mamassian Study of “Expectation shapes perceived time of events&quot; (github.com)</a></p><p id="eaa74c25-0b2b-4aaf-bf2d-f70dac2583ce" class=""><strong>References:</strong></p><p id="999b5901-387f-4280-b2a1-17660fe9f0e8" class="">Angrilli, A., Cherubini, P., Pavese, A., &amp; Manfredini, S. (1997). The influence of affective factors on time perception. <em>Perception &amp; Psychophysics</em>, <em>59</em>(6), 972–982. <a href="https://doi.org/10.3758/BF03205512">https://doi.org/10.3758/BF03205512</a></p><p id="94322517-65a3-4a99-a191-2fd3df2bb978" class="">Birngruber, T., Schröter, H., &amp; Ulrich, R. (2014). Duration perception of visual and auditory oddball stimuli: Does judgment task modulate the temporal oddball effect? <em>Attention, Perception, &amp; Psychophysics</em>, <em>76</em>(3), 814–828. <a href="https://doi.org/10.3758/s13414-013-0602-2">https://doi.org/10.3758/s13414-013-0602-2</a></p><p id="8696640b-c58c-40ea-936b-a5062043ad44" class="">Brown, S. W., &amp; Boltz, M. (2002). Attentional processes in time perception: Effects of mental workload and event structure. <em>Journal of Experimental Psychology: Human Perception &amp; Performance</em>, <em>28</em>, 600-615. doi:10.1037/0096-1523.28.3.600</p><p id="db61a046-946a-4f8e-9ab7-264d305a3a18" class="">Burr, D., Rocca, E. D., &amp; Morrone, M. C. (2013). Contextual effects in interval-duration judgements in vision, audition and touch. <em>Experimental brain research</em>, <em>230</em>(1), 87-98.</p><p id="7b864b72-993c-4684-9090-11048192ce03" class="">De Lange, F. P., Heilbron, M., &amp; Kok, P. (2018). How do expectations shape perception?. <em>Trends in cognitive sciences</em>, <em>22</em>(9), 764-779.</p><p id="ddaaf0e3-5fec-4031-bda2-4c6e962831e5" class="">Fechner, G. T. (1860). <em>Elemente der psychophysik</em> (Vol. 2). Breitkopf u. Härtel.</p><p id="d4bbcd19-6fda-4b55-b418-358b1ea7afaa" class="">Gau, R., &amp; Noppeney, U. (2016). How prior expectations shape multisensory perception. <em>Neuroimage</em>, <em>124</em>, 876-886.</p><p id="0e0c1ef1-d0a7-44a9-a862-2a23564e4df5" class="">Grommet, E. K., Droit-Volet, S., Gil, S., Hemmes, N. S., A. Baker, H., and Brown, B. L. (2011) Time estimation of fear cues in human observers. <em>Behavioural Processes,</em> 86(1) 88-93.</p><p id="2e318182-44e0-4e7d-997d-4e7788c84365" class="">Grondin, S. (2010). Timing and time perception: A review of recent behavioral and neuroscience findings and theoretical directions<em>. Attention, Perception, &amp; Psychophysics, 72(3), 561–582</em>. <a href="https://doi.org/10.3758/APP.72.3.561">https://doi.org/10.3758/APP.72.3.561</a></p><p id="97c0f381-37c3-41cd-b712-a253036e20c6" class="">Hartcher-O’Brien, J., Di Luca, M., &amp; Ernst, M. O. (2014). The duration of uncertain times: audiovisual information about intervals is integrated in a statistically optimal fashion<em>. PloS one, 9(3), e89339.</em></p><p id="7715d539-c1d3-4a6c-b4aa-2142f75346a5" class="">Herbst, S. K., Javadi, A. H., van der Meer, E., &amp; Busch, N. A. (2013). How Long Depends on How Fast—Perceived Flicker Dilates Subjective Duration. <em>PLoS ONE, 8(10), e76074.</em> <a href="https://doi.org/10.1371/journal.pone.0076074">https://doi.org/10.1371/journal.pone.0076074</a></p><p id="61f6fb9b-18e9-4e19-a942-3d141f7c1ea8" class="">Hohle, R. H. (1965). Inferred components of reaction times as functions of foreperiod duration. Journal of experimental psychology, 69(4), 382.</p><p id="159478d3-ed1e-497b-9979-785325907ed4" class="">Jansson, C., Marlow, N., &amp; Bristow, M. (2004). The influence of colour on visual search times in cluttered environments. <em>Journal of Marketing Communications, 10(3),</em> 183–193. https://doi.org/10.1080/1352726042000207162</p><p id="8f7a55dd-69f1-4072-82ec-4bae5945c887" class="">Jazayeri, M., &amp; Shadlen, M. N. (2010). Temporal context calibrates interval timing. <em>Nature neuroscience</em>, <em>13</em>(8), 1020-1026.</p><p id="e1e64b0e-d67c-40a6-b423-d3cb613e4dc0" class="">Jones, M. R., &amp; Boltz, M. (1989). Dynamic attending and responses to time. <em>Psychological Review, 96, 459-491.</em> doi:10.1037/0033-295X .96.3.459</p><p id="46367e77-9e7f-4067-9604-a99da7572346" class="">Jovanovic, L., &amp; Mamassian, P. (2020). Temporal context affects the perceived time of visual events. <em>Psychonomic Bulletin &amp; Review</em>, <em>27</em>(1), 56-61.</p><p id="0b4becd6-0cae-4c69-84b5-7242c15c9439" class="">Kok, P., Jehee, J. F., &amp; De Lange, F. P. (2012). Less is more: expectation sharpens representations in the primary visual cortex. <em>Neuron</em>, <em>75</em>(2), 265-270.</p><p id="898a7708-9f0f-4164-9fae-e61cb268e01f" class="">Matthews, W. J., &amp; Gheorghiu, A. I. (2016). Repetition, expectation, and the perception of time. <em>Current Opinion in Behavioral Sciences</em>, <em>8</em>, 110-116.</p><p id="eda00ff4-02ca-4021-8a44-f55a4f9696f3" class="">Rhodes, D., &amp; Di Luca, M. (2016). Temporal Regularity of the Environment Drives Time Perception. <em>PLOS ONE, 11(7), e0159842</em>. https://doi.org/10.1371/journal.pone.0159842</p><p id="104455f9-c705-42ff-a4c5-42e07f63f8b1" class="">Sawai, K. I., Sato, Y., &amp; Aihara, K. (2012). Auditory time-interval perception as causal inference on sound sources. <em>Frontiers in psychology</em>, <em>3</em>, 524.</p><p id="437cabab-d861-4703-af02-248ee5792f8b" class="">Seifried, T., &amp; Ulrich, R. (2011a). Exogenous visual attention prolongs perceived duration. <em>Attention, Perception, &amp; Psychophysics, 73(1), 68–85.</em> <a href="https://doi.org/10.3758/s13414-010-0005-6">https://doi.org/10.3758/s13414-010-0005-6</a></p><p id="ca69636b-ea91-4235-b900-06f2526b3096" class="">Shi, Z., Church, R. M., &amp; Meck, W. H. (2013). Bayesian optimization of time perception. <em>Trends in cognitive sciences</em>, <em>17</em>(11), 556-564.</p><p id="74a7d286-0e32-4c1f-a547-43cce35c3b3f" class="">Stetson, C., Fiesta, M. P., and Eagleman, D. M. (2007). Does time really slow down during a frightening event? PLoS One 2:e1295. doi: 10.1371/journal.pone. 0001295</p><p id="7d8a8bca-500e-4486-b2c0-fed5ab2b9a9d" class="">Summerfield, C., &amp; De Lange, F. P. (2014). Expectation in perceptual decision making: Neural and computational mechanisms. <em>Nature Reviews Neuroscience, 15(11), 745</em>.</p><p id="144738de-13b3-44d6-b28d-868693072c82" class="">Treisman, M., Faulkner, A., Naish, P. L. N., &amp; Brogan, D. (1990). The Internal Clock: Evidence for a Temporal Oscillator Underlying Time Perception with Some Estimates of its Characteristic Frequency. <em>Perception, 19(6), 705–742</em>. <a href="https://doi.org/10.1068/p190705">https://doi.org/10.1068/p190705</a></p><p id="4bc88d10-248f-420c-9ea2-c655c7c01461" class="">Tse, P. U., Intriligator, J., Rivest, J., &amp; Cavanagh, P. (2004). Attention and the subjective expansion of time. <em>Perception &amp; Psychophysics, 66(7), 1171–1189.</em> <a href="https://doi.org/10.3758/BF03196844">https://doi.org/10.3758/BF03196844</a></p><p id="efb18bef-8885-41d0-9339-79d2baa484c0" class="">Urgen, B. M., &amp; Boyaci, H. (2019). When expectations are not met: unraveling the computational mechanisms underlying the effect of expectation on perceptual thresholds<em>. BioRxiv, 545244.</em></p></div></article></body></html>
