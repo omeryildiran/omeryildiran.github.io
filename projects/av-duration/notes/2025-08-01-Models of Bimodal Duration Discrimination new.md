@@ -1,5 +1,5 @@
 ---
-layout: post    
+layout: default    
 title: "Models of Bimodal Duration Estimation"
 date: 2025-07-01
 nav_exclude: true
