@@ -2,6 +2,8 @@
 layout: default    
 title: "Models of Bimodal Duration Estimation"
 date: 2025-07-01
+permalink: /projects/av-duration/notes/models-of-bimodal/
+
 nav_exclude: true
 
 ---
