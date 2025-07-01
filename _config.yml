@@ -18,53 +18,42 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 
-title: Omer Yildiran
-email: ofy204@nyu.edu
-description: >- # this means to ignore newlines until "baseurl:"
-  Write an awesome description for your new site here. You can edit this
-  line in _config.yml. It will appear in your document head meta (for
-  Google search results) and in your feed.xml site description.
-baseurl: "" # the subpath of your site, e.g. /blog
-url: "" # the base hostname & protocol for your site, e.g. http://example.com
-twitter_username: jekyllrb
-github_username:  omeryildiran
+title: "Omer Yildiran"
+
+email: "ofy204@nyu.edu"
+description: >-
+  PhD Candidate in Cognition & Perception at NYU | Time perception, sensory modeling, adaptive learning
+baseurl: "" # leave blank if you're deploying to omeryildiran.github.io
+url: "https://omeryildiran.github.io"
+
+theme: just-the-docs
+
+color_scheme: dark
+
 
 # Build settings
-remote_theme: "mmistakes/minimal-mistakes"
 
 plugins:
-  - jekyll-feed
-  - jekyll-sitemap
-  - jekyll-include-cache
+  - jekyll-default-layout
 
-# Enable the navigation menu
-navigation:
-  - name: main
-    items: _data/navigation.yml
-defaults:
-  - scope:
-      path: ""
-      type: pages
-    values:
-      layout: single
-      sidebar:
-        nav: "main"
 author:
-  name     : "Omer Yildiran"
-  avatar   : "/assets/images/ofy_profile_pic.jpeg"
-  bio      : "PhD candidate in Computational Neuroscience, NYU"
-  location : "New York, USA"
+  name: "Omer Yildiran"
+  avatar: "/assets/images/ofy_profile_pic.jpeg"
+  bio: "PhD candidate in Cognitive Science, NYU"
+  location: "New York, USA"
 
-minimal_mistakes_skin    : "dark" # "air", "aqua", "contrast", "dark", "dirt", "neon", "mint", "plum", "sunrise"
+includes:
+  head:
+    - head_custom.html
 
-markdown: kramdown
-kramdown:
-  input: GFM
-  math_engine: mathjax
-mathjax: true
-# Needed for custom head content
-include:
-  - _includes
+nav:
+  - title: "Home"
+    url: /
+  - title: "About"
+    url: /about/
+  - title: "Projects"
+    url: /projects/
+
 
 # Exclude from processing.
 # The following items will not be processed, by default.

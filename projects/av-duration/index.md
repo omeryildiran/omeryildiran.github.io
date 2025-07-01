@@ -1,14 +1,12 @@
 ---
-layout: single
-title: "Audiovisual Duration Estimation"
-permalink: /projects/av-duration/
+layout: post    
+title: "Models of Bimodal Duration Estimation"
+date: 2025-07-01
+nav_exclude: true
+layout: post
 ---
+# Project: Bimodal Duration Estimation
+This project focuses on modeling how humans estimate time when presented with bimodal sensory inputs, particularly in the context of audiovisual stimuli. The goal is to understand the underlying mechanisms of temporal perception and how different sensory modalities interact to influence our perception of time.
 
-Doctoral research at NYU (Landy Lab) focused on how humans estimate time in multisensory environments under uncertainty and conflict.
-
-- Designed psychophysical tasks with variable auditory noise and visual conflict
-- Modeled responses using Bayesian causal inference models
-- Investigated scalar variability in time perception
-
-*Supervisor: Michael S. Landy*
-
+Here you can find the model:
+[Models of Bimodal Duration Discrimination](./2025-08-01-Models of Bimodal Duration Discrimination new/)

@@ -1,8 +1,8 @@
 ---
-layout: single
+layout: default    
 title: "Models of Bimodal Duration Estimation"
 date: 2025-07-01
-categories: [blog]
+nav_order: 1
 ---
 # Model Coding:
 

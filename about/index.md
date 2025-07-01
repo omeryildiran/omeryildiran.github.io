@@ -1,9 +1,10 @@
 ---
-layout: single
+layout: page
 title: "About Me"
-permalink: /about/
-author_profile: true
 ---
+
+# About Me
+<img src="/assets/images/ofy_profile_pic.jpeg" alt="Omer Faruk Yildiran" width="180" height="180" style="border-radius: 50%; margin-bottom: 1em;" />
 
 I am Omer a learner with a passion for cognitive science and mostly problem solving.
 
@@ -19,9 +20,11 @@ On this website, you can access my CV, projects, short essays, codes, tutorials,
 
 **Google Scholar:** [‪Omer F. YILDIRAN‬ - ‪Google Scholar‬](https://scholar.google.com/citations?user=rfc-iLoAAAAJ&hl=en&oi=ao)
 
+**OSF:** [OSF Omer Faruk YILDIRAN](https://osf.io/7s4ez)
+
 **Researchgate:** [Omer Faruk Yildiran (researchgate.net)](https://www.researchgate.net/profile/Omer_Yildiran)
 
-**OSF:** [OSF | Omer Faruk YILDIRAN](https://osf.io/7s4ez/)
 
+<br>
 
 Currently I am working with the fantastic Prof. Michael Landy.

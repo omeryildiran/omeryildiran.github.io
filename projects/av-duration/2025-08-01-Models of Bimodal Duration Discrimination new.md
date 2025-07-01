@@ -1,8 +1,9 @@
 ---
-layout: single
+layout: post    
 title: "Models of Bimodal Duration Estimation"
 date: 2025-07-01
-categories: [blog]
+nav_exclude: true
+
 ---
 # Model Coding:
 
