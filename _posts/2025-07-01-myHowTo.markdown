@@ -1,0 +1,13 @@
+---
+layout: single
+title:  "How to run Jekyll"
+date:   2025-06-20 02:26:48 -0400
+categories: [blog]
+---
+Hello this is my:
+# How to run my site short terminal arguments
+chruby ruby-3.4.1  
+ruby -v  
+cd ofyWeb  
+bundle exec jekyll serve  
+
