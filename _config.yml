@@ -26,7 +26,7 @@ description: >-
 baseurl: "" # leave blank if you're deploying to omeryildiran.github.io
 url: "https://omeryildiran.github.io"
 
-theme: just-the-docs
+remote_theme: just-the-docs/just-the-docs
 
 color_scheme: dark
 
