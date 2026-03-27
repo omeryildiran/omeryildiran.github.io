@@ -2,4 +2,52 @@
 <script id="MathJax-script" async
   src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
 </script>
+<style>
+  .side-bar {
+    /* Adjusted to match the dark teal base (rgb(15, 52, 60)) */
+    background: linear-gradient(180deg, rgba(17, 36, 45, 0.75) 0%, rgba(26, 44, 50, 0.856) 100%);
+    /* Changed border to a subtle teal/cyan */
+    border-right: 1px solid rgba(100, 210, 255, 0.15);
+  }
 
+  .site-header {
+    background: transparent;
+    /* Soft border matching the teal theme */
+    border-bottom: 1px solid rgba(100, 210, 255, 0.12);
+  }
+
+  .site-title,
+  .site-title:visited {
+    /* Brighter, slightly cyan-tinted off-white */
+    color: #e0f4f9;
+    text-shadow: 0 0 15px rgba(100, 30, 50, 0.3); /* Subtle nod to your burgundy glow */
+  }
+
+  .nav-list .nav-list-item .nav-list-link {
+    /* Muted teal text */
+    color: #a7ced6;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+  }
+
+  .nav-list .nav-list-item .nav-list-link:hover,
+  .nav-list .nav-list-item .nav-list-link.active {
+    /* Hover effect using a teal-cyan tint */
+    background: rgba(0, 200, 255, 0.08);
+    color: #ffffff;
+    box-shadow: inset 0 0 10px rgba(0, 180, 255, 0.05);
+  }
+
+  .search-input {
+    /* Deep background to stay legible against the radial gradient */
+    background: rgba(10, 20, 25, 0.85);
+    border: 1px solid rgba(0, 180, 255, 0.25);
+    color: #f0faff;
+  }
+  
+  /* Optional: Matching Scrollbar for the sidebar */
+  .side-bar::-webkit-scrollbar-thumb {
+    background: rgba(100, 30, 50, 0.5); /* Burgundy glow color for scrollbar */
+    border-radius: 10px;
+  }
+</style>
