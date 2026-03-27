@@ -68,12 +68,11 @@ On this website, you can access my CV, projects, short essays, codes, tutorials,
 <section class="project-card reveal-on-scroll">
   <h3><a href="https://www.notion.so/DNN-for-Moving-Material-Perception-JLU-Giessen-D-rschner-Lab-71bf2fa9f4fa40538d9d43eba757efa9?pvs=21">Unsupervised learning can predict properties of non-rigid mirror objects in ambiguous conditions</a></h3>
   <a class="link-chip" href="https://github.com/omeryildiran/Non_Rigid_Shiny">Github Repo</a>
-  <a class="link-chip" href="{{ '/assets/videos/non_rigid_shiny_teaser.mp4' | relative_url }}">Open video directly</a>
+  <a class="link-chip" href="https://drive.google.com/file/d/1tMBHr-U8ospn7wwUgo_KK0J-nJXNzOsJ/view?usp=share_link">Open video on Google Drive</a>
   <a class="link-chip" href="https://www.visionsciences.org/presentation/?id=5026">Presentation</a>
-  <video controls playsinline preload="metadata" class="project-media">
-    <source src="{{ '/assets/videos/non_rigid_shiny_teaser.mp4' | relative_url }}" type="video/mp4">
-    Your browser does not support the video tag.
-  </video>
+  <div class="media-frame">
+    <iframe src="https://drive.google.com/file/d/1tMBHr-U8ospn7wwUgo_KK0J-nJXNzOsJ/preview" title="Unsupervised learning can predict properties of non-rigid mirror objects in ambiguous conditions - Video" class="media-embed" allow="autoplay; fullscreen"></iframe>
+  </div>
 </section>
 
 <section class="project-card reveal-on-scroll">
