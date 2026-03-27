@@ -75,7 +75,7 @@ On this website, you can access my CV, projects, short essays, codes, tutorials,
 - **Github:** [omeryildiran (Omer Faruk Yildiran) (github.com)](https://github.com/omeryildiran)
 - **Google Scholar:** [Omer F. YILDIRAN - Google Scholar](https://scholar.google.com/citations?user=rfc-iLoAAAAJ&hl=en&oi=ao)
 - **Researchgate:** [Omer Faruk Yildiran (researchgate.net)](https://www.researchgate.net/profile/Omer_Yildiran)
-- **OSF:** [OSF ](https://osf.io/7s4ez/)
+- **OSF:** [OSF](https://osf.io/7s4ez/)
 
 ---
 
@@ -97,7 +97,7 @@ On this website, you can access my CV, projects, short essays, codes, tutorials,
 
 ## Publications
 
-- **Yildiran, O. F.** & Mamassian, P. (2023). Role of Expectation on Perceived Time of Visual Events. [Under review](https://drive.google.com/file/d/1dQwQV8OmORSYC_rPqAxFgNsVfJpEPzGI/view?usp=sharing)
+- **Yildiran, O. F.** & Mamassian, P. (2023). Role of Expectation on Perceived Time of Visual Events. [M1 Thesis](https://drive.google.com/file/d/1dQwQV8OmORSYC_rPqAxFgNsVfJpEPzGI/view?usp=sharing)
 - **Yildiran, O. F.**, Storrs, K. R., Fleming, R. W., & Doerschner, K. (2023). Unsupervised learning can predict properties of nonrigid mirror objects in ambiguous conditions. *Journal of Vision, 23(9)*. [doi](https://doi.org/10.1167/jov.23.9.5026)
 - Saint-Raymond, L.; Abgaryan, H.; Georgiou, A. L.; Montanteme, J.; Nijman, J.; Novelli Duro, F. M.; **Yildiran, O. F.** (2022). George Viau's Collection: A Computational Approach. *Preprints 2022, 2022120203*. doi: 10.20944/preprints202212.0203.v1
 - **Yildiran, O. F.** & Dovencioglu, D. N. (2021). Effect of Auditory Cues on Object's Material Property Perception. *The Undergraduate Library*. [link](https://gua.soutron.net/Portal/Default/en-GB/RecordView/Index/2067)
