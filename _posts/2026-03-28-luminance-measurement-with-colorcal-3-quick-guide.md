@@ -1,105 +1,80 @@
----
-layout: default
-title: "Luminance Measurement with ColorCAL 3"
-date: 2026-03-28
----
 
-This quick guide explains how to measure luminance values in `cd/m^2` for visual stimuli using the CRS ColorCAL 3. It is intended for reporting stimulus luminance in manuscripts, methods sections, and experiment notes.
 
-## When to use this guide
+This guideline it for measuring luminance (cd/m²) of visual stimuli for reporting purposes.
 
-Use this guide when you want to:
+## Step 0- (Only if needed) Update firmware (Mac/Windows)
+If somehow your computer doesnt recognize the tool you might need to update firmware. For me it automatically recognized and I think if you are connected to internet your computer would probably recognize the tool.
 
-- measure the luminance of stimuli shown on your experiment display
-- report luminance values for backgrounds, targets, or other visual elements
-- collect either a few manual readings or repeated measurements through code
+## **1. Manual Method (Simple)**
 
-## Step 0: Update firmware only if needed
+This method is manual measurement of luminance. It is easy and fast. If your stimulus consists of only a few components (e.g., background and a disk), and you are not planning to calibrate but only to report luminance values in your article, this method is sufficient.
 
-If your computer does not recognize the device, you may need to update the ColorCAL 3 firmware. In many cases the device is recognized automatically, especially on a machine with the required drivers already installed.
+### **Setup**
 
-## 1. Manual method
+- Use the same display and settings as in the experiment
+- Present stimuli full-screen
 
-This is the simplest approach. It is useful when your stimulus has only a few components, such as a background and a target, and you mainly want luminance values for reporting rather than full calibration.
+### **Connection (Mac or laptop)**
 
-### Setup
+1. Plug in ColorCAL
+2. In Terminal:
 
-- Use the same display and display settings as in the experiment.
-- Disable HDR, Night Shift, True Tone, and auto-brightness.
-- Present the stimulus full-screen.
-- Let the display warm up before measuring if you need stable values.
-
-### Connect the device
-
-1. Plug in the ColorCAL 3.
-2. In Terminal, list the device:
-
-```bash
+```
 ls /dev/tty.usb*
 ```
+This command should give you list of the devices connected via usb to your computer.  From the list find sth named like usbmodemXXXX and copy the name.
 
-3. Connect to the reported device:
-
-```bash
-screen /dev/tty.usbmodemXXXX 115200
+3. Connect:
 ```
+screen /dev/tty.usbmodemXXXX
+```
+   
+4. Type '?' and this will enter the device menu, which will show  some command that you can use: ![[assets/Pasted image 20260328161220.png]]
+Thats it you are in the device and ready to take measurements
+### **Measurement**
 
-4. Type `?` and press Enter to confirm the connection.
+1. Display the stimulus (e.g., background or target)
+2. Place the device flat at screen center
+3. 
+4. Type: 'M' and press enter.  Dont be confused M will not be visible on terminal.
 
-### Measure luminance
+5. Output will be:
 
-1. Display the stimulus you want to measure.
-2. Place the device flat against the center of the screen.
-3. Type `M` and press Enter.
-4. The device returns output in this format:
-
-```text
+```
 OK00, Y, x, y
 ```
+ ![[Pasted image 20260328161441.png]]
+4. Use **Y** (cd/m²) as luminance
 
-Use `Y` as the luminance value in `cd/m^2`.
+- Take 5-10 measurements per condition
+- Record values and compute mean
+---
 
-### Reporting tip
+## **2. Automated Method (PsychoPy or psychtoolbox)**
+This is if you want to record values over and over again.
+### **Setup**
 
-- Take `5` to `10` measurements per condition.
-- Record the values and report the mean.
-- If relevant, also report the display model and display settings.
+- Plug ColorCAL into the experiment computer
+- Use same display settings as experiment  
+### **Example Code** (for psychopy)
 
-## 2. Automated method with PsychoPy
-
-Use this method when you want to measure luminance repeatedly from within an experiment or script.
-
-### Setup
-
-- Plug the ColorCAL 3 into the same computer used for the experiment.
-- Keep the same display settings used during data collection.
-
-### Example code
-
-```python
+```
 from psychopy.hardware.crs.colorcal import ColorCAL
 from psychopy import visual
 
-win = visual.Window(fullscr=True, color=[0, 0, 0])
+win = visual.Window(fullscr=True, color=[0,0,0])
 cc = ColorCAL()
 
-# Example stimulus
-stim = visual.Rect(win, width=2, height=2, fillColor=[0, 0, 0])
+# example stimulus
+stim = visual.Rect(win, width=2, height=2, fillColor=[0,0,0])
 
 levels = [-1, -0.5, 0, 0.5, 1]
 
-for level in levels:
-    stim.fillColor = [level, level, level]
+for lvl in levels:
+    stim.fillColor = [lvl, lvl, lvl]
     stim.draw()
     win.flip()
-    luminance = cc.getLum()
-    print(level, luminance)
+    lum = cc.getLum()
+    print(lvl, lum)
 ```
 
-This prints the luminance measured for each stimulus level.
-
-## Notes
-
-- Always measure on the exact display used in the experiment.
-- Small display setting changes can affect luminance substantially.
-- If you are writing a paper, manual measurement is often enough when you only need descriptive luminance values.
