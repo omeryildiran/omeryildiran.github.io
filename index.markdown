@@ -19,6 +19,11 @@ I am a learner with a passion for cognitive science and mostly problem solving.
 
 On this website, you can access my CV, projects, short essays, codes, tutorials, and helpful guides.
 
+## Helpful Guides
+
+- [Luminance Measurement with ColorCAL 3]({% post_url 2026-03-28-luminance-measurement-with-colorcal-3-quick-guide %})
+- [All posts](/blog.html)
+
 💡 **Links**
 
 - **Github:** [omeryildiran (Omer Faruk Yildiran) (github.com)](https://github.com/omeryildiran)
