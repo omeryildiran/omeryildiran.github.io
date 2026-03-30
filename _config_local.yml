@@ -1,4 +1,0 @@
-theme: just-the-docs
-remote_theme: null
-plugins:
-  - jekyll-default-layout
