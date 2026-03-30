@@ -1,0 +1,101 @@
+:root{
+  --bg:#f7f8fb;
+  --surface:#ffffff;
+  --text:#0f172a;
+  --muted:#475569;
+  --border:color-mix(in srgb, var(--text) 12%, transparent);
+  --brand:#2563eb;
+  --brand-2:#0ea5e9;
+  --shadow: 0 18px 60px rgba(2, 6, 23, .10);
+
+  --radius: 16px;
+  --container: 1100px;
+  --container-wide: 1260px;
+  --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+}
+
+html, body { height: 100%; }
+body{
+  margin:0;
+  font-family: var(--font);
+  color: var(--text);
+  background:
+    radial-gradient(900px 500px at 12% 10%, color-mix(in srgb, var(--brand) 12%, transparent), transparent 60%),
+    radial-gradient(900px 500px at 90% 5%, color-mix(in srgb, var(--brand-2) 12%, transparent), transparent 55%),
+    var(--bg);
+}
+
+a{ color: var(--brand); text-decoration: none; }
+a:hover{ text-decoration: underline; }
+
+.container{
+  width: min(100% - 2rem, var(--container));
+  margin-inline: auto;
+}
+.container.wide{
+  width: min(100% - 2rem, var(--container-wide));
+}
+
+.card{
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.btn{
+  display:inline-flex;
+  align-items:center;
+  gap:.5rem;
+  padding:.55rem .9rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  text-decoration:none;
+}
+.btn.primary{
+  background: linear-gradient(135deg, var(--brand), var(--brand-2));
+  border-color: color-mix(in srgb, var(--brand) 45%, transparent);
+  color: white;
+}
+.btn:hover{ text-decoration:none; filter: brightness(.99); }
+
+.prose{
+  font-size: 1.03rem;
+  line-height: 1.75;
+}
+.prose p, .prose li{ color: color-mix(in srgb, var(--text) 92%, var(--muted) 8%); }
+.prose h1, .prose h2, .prose h3{ letter-spacing: -0.02em; }
+.prose h1{ font-size: clamp(2.1rem, 4vw, 3rem); margin: 0 0 .5rem; }
+.prose h2{ font-size: clamp(1.5rem, 2.5vw, 2rem); margin-top: 2.2rem; }
+.prose h3{ font-size: 1.2rem; margin-top: 1.5rem; }
+.prose code{
+  font-family: var(--mono);
+  font-size: .95em;
+  padding: .12em .35em;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--surface) 86%, #eef2ff 14%);
+}
+.prose pre{
+  overflow:auto;
+  padding: 1rem;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface) 92%, #0b1220 8%);
+}
+
+/* KaTeX styling */
+.katex-display{
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: .35rem 0;
+}
+
+/* Small-screen nav spacing */
+@media (max-width: 760px){
+  .container, .container.wide{ width: min(100% - 1.25rem, var(--container-wide)); }
+}
+

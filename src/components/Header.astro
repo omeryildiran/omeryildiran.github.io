@@ -1,0 +1,88 @@
+---
+const nav = [
+  { href: "/", label: "Home" },
+  { href: "/about/", label: "About" },
+  { href: "/publications/", label: "Publications" },
+  { href: "/projects/", label: "Projects" },
+  { href: "/notes/", label: "Notes" },
+  { href: "/cv/", label: "CV" },
+  { href: "/contact/", label: "Contact" }
+];
+---
+
+<header class="site-header">
+  <div class="container wide inner">
+    <a class="brand" href="/" aria-label="Homepage">
+      <span class="dot" aria-hidden="true"></span>
+      <span class="name"><slot name="name" /></span>
+    </a>
+
+    <nav class="nav" aria-label="Primary">
+      {nav.map((item) => (
+        <a class="navlink" href={item.href}>
+          {item.label}
+        </a>
+      ))}
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header{
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    backdrop-filter: blur(10px);
+    background: color-mix(in srgb, var(--bg) 72%, transparent);
+    border-bottom: 1px solid var(--border);
+  }
+  .inner{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding: .85rem 0;
+    gap: 1rem;
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap: .65rem;
+    font-weight: 650;
+    color: var(--text);
+    text-decoration:none;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+  }
+  .dot{
+    width: 11px;
+    height: 11px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--brand), var(--brand-2));
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--brand) 16%, transparent);
+  }
+  .name{ font-size: 1.02rem; }
+  .nav{
+    display:flex;
+    flex-wrap: wrap;
+    gap: .25rem .35rem;
+    justify-content: flex-end;
+  }
+  .navlink{
+    color: color-mix(in srgb, var(--text) 86%, var(--muted) 14%);
+    padding: .45rem .65rem;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    text-decoration:none;
+    font-size: .95rem;
+  }
+  .navlink:hover{
+    border-color: var(--border);
+    background: var(--surface);
+    text-decoration:none;
+  }
+  @media (max-width: 760px){
+    .inner{ align-items:flex-start; flex-direction: column; }
+    .nav{ justify-content: flex-start; }
+  }
+</style>
+

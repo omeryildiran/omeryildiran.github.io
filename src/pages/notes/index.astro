@@ -1,0 +1,75 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+const notes = (await getCollection("notes")).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+
+const notePath = (n) => `/notes/${n.data.slug ?? n.slug}/`;
+---
+
+<BaseLayout title="Notes" description="Blog/notes written in Markdown with math support.">
+  <h1>Notes</h1>
+  <p>
+    Short writeups, methods, and derivations. Posts are Markdown files under
+    <code>src/content/notes/</code>.
+  </p>
+
+  <div class="list">
+    {notes.map((n) => (
+      <article class="item">
+        <div class="meta">
+          <time datetime={n.data.date.toISOString()}>
+            {n.data.date.toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "short",
+              day: "2-digit"
+            })}
+          </time>
+          {n.data.tags?.length ? (
+            <span class="tags">
+              {n.data.tags.map((t) => (
+                <span class="tag">{t}</span>
+              ))}
+            </span>
+          ) : null}
+        </div>
+        <h2 class="title">
+          <a href={notePath(n)}>{n.data.title}</a>
+        </h2>
+        {n.data.description ? <p class="desc">{n.data.description}</p> : null}
+      </article>
+    ))}
+  </div>
+</BaseLayout>
+
+<style>
+  .list{ margin-top: 1rem; display:grid; gap: .9rem; }
+  .item{
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: .95rem 1rem;
+    background: var(--surface);
+  }
+  .meta{
+    display:flex;
+    align-items:center;
+    gap: .6rem;
+    flex-wrap: wrap;
+    color: var(--muted);
+    font-size: .95rem;
+  }
+  .tags{ display:flex; gap:.35rem; flex-wrap: wrap; }
+  .tag{
+    border: 1px solid var(--border);
+    background: color-mix(in srgb, var(--surface) 86%, #eef2ff 14%);
+    padding: .15rem .45rem;
+    border-radius: 999px;
+    font-size: .85rem;
+    color: color-mix(in srgb, var(--text) 86%, var(--muted) 14%);
+  }
+  .title{ margin: .35rem 0 .2rem; font-size: 1.25rem; }
+  .desc{ margin: 0; color: var(--muted); }
+</style>
+

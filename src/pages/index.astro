@@ -1,0 +1,205 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { site } from "../site";
+import { projectDemos } from "../data/projects";
+---
+
+<BaseLayout title={`${site.name}`} description={site.description} wide>
+  <section class="home-hero">
+    <div class="banner card">
+      <img
+        src="/assets/images/background.jpg"
+        alt="Homepage background"
+        loading="eager"
+      />
+    </div>
+    <div class="hero-copy">
+      <h1>{site.name}</h1>
+      <p class="lead">
+        I am a learner with a passion for cognitive science and mostly problem solving.
+      </p>
+      <ul class="bullets">
+        <li><strong>New York University-NYU</strong> Computational Neuroscience PhD. Cand.</li>
+        <li><strong>École normale supérieure - PSL</strong> (Paris, France), MSc.</li>
+        <li><strong>Middle East Technical University</strong> (Ankara, Turkey), Psychology BSc.</li>
+      </ul>
+      <p class="lead">
+        On this website, you can access my CV, projects, short essays, codes, tutorials, and helpful guides.
+      </p>
+      <div class="cta">
+        <a class="btn primary" href="/projects/">Projects</a>
+        <a class="btn" href="/notes/">All posts</a>
+        <a class="btn" href="/cv/">CV</a>
+      </div>
+      <div class="chips">
+        <a class="chip" href="https://github.com/omeryildiran">GitHub</a>
+        <a class="chip" href="https://scholar.google.com/citations?user=rfc-iLoAAAAJ&hl=en&oi=ao">Google Scholar</a>
+        <a class="chip" href="https://www.researchgate.net/profile/Omer_Yildiran">ResearchGate</a>
+        <a class="chip" href="https://osf.io/7s4ez/">OSF</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Helpful Guides</h2>
+    <ul>
+      <li><a href="/notes/luminance-measurement-with-colorcal-3-quick-guide/">Luminance Measurement with ColorCAL 3</a></li>
+      <li><a href="/notes/">All posts</a></li>
+    </ul>
+  </section>
+
+  <section class="section">
+    <h2>CV Highlights</h2>
+    <ul>
+      <li><strong>Current:</strong> PhD in Cognition and Perception (Computational Neuroscience), NYU (2024-present)</li>
+      <li><strong>Funding:</strong> MacCracken Fellowship (full doctoral funding, 2024-2029)</li>
+      <li><strong>Recent roles:</strong> Graduate Research Assistant (Landy Lab), Teaching Assistant at NYU, Research Scientist Intern (Southampton/CPC)</li>
+      <li><strong>Technical stack:</strong> Python (PyTorch, NumPy, SciPy, OpenCV, scikit-learn), MATLAB, R, Blender Python API, Unity, Bayesian and stochastic modeling</li>
+      <li><strong>Selected awards:</strong> Berlin Science of Intelligence Grant (2023), French Embassy Scholarship (2022-2023), Global Undergraduate Award - Highly Commended (2021)</li>
+    </ul>
+  </section>
+
+  <section class="section">
+    <h2>News</h2>
+    <p>
+      <a href="/notes/psychopy-experiment-design-workshop/">
+        Workshop on psychophysics experiment design and analysis
+      </a>
+    </p>
+  </section>
+
+  <section class="section">
+    <h2>Publications (selected)</h2>
+    <ul>
+      <li><strong>Yildiran, O. F.</strong> &amp; Mamassian, P. (2023). Role of Expectation on Perceived Time of Visual Events. <a href="https://drive.google.com/file/d/1dQwQV8OmORSYC_rPqAxFgNsVfJpEPzGI/view?usp=sharing">M1 Thesis</a></li>
+      <li><strong>Yildiran, O. F.</strong>, Storrs, K. R., Fleming, R. W., &amp; Doerschner, K. (2023). Unsupervised learning can predict properties of nonrigid mirror objects in ambiguous conditions. <em>Journal of Vision, 23(9)</em>. <a href="https://doi.org/10.1167/jov.23.9.5026">doi</a></li>
+      <li>Saint-Raymond, L.; Abgaryan, H.; Georgiou, A. L.; Montanteme, J.; Nijman, J.; Novelli Duro, F. M.; <strong>Yildiran, O. F.</strong> (2022). George Viau's Collection: A Computational Approach. <em>Preprints 2022, 2022120203</em>. doi: 10.20944/preprints202212.0203.v1</li>
+      <li><strong>Yildiran, O. F.</strong> &amp; Dovencioglu, D. N. (2021). Effect of Auditory Cues on Object's Material Property Perception. <em>The Undergraduate Library</em>. <a href="https://gua.soutron.net/Portal/Default/en-GB/RecordView/Index/2067">link</a></li>
+      <li><strong>Yildiran, O. F.</strong> &amp; Dovencioglu, N. D. (2021). Parchment Skin Illusion for Haptic Perception of Viscous Materials. <em>Perception, 50(1_SUPPL)</em>, 177-177. <a href="https://hdl.handle.net/11511/102435">hdl</a></li>
+    </ul>
+    <p><a class="btn" href="/publications/">Full publications</a></p>
+  </section>
+
+  <section class="section">
+    <h2>Projects (demos)</h2>
+    <div class="projects">
+      {projectDemos.map((p) => (
+        <section class="project card reveal">
+          <h3>
+            {p.title}
+          </h3>
+          <div class="project-chips">
+            {p.chips?.map((c) => (
+              <a class="chip" href={c.href}>{c.label}</a>
+            ))}
+          </div>
+          <div class="media">
+            {p.embed.kind === "iframe" ? (
+              <iframe
+                class="frame"
+                src={p.embed.src}
+                title={p.embed.title}
+                allow={p.embed.allow}
+                allowfullscreen
+              />
+            ) : (
+              <img class="img" src={p.embed.src} alt={p.embed.alt} loading="lazy" />
+            )}
+          </div>
+        </section>
+      ))}
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>External Works</h2>
+    <ul>
+      <li><a href="https://www.notion.so/Trying-to-draw-42bbff2def5643e0899be49670d2434c?pvs=21">Trying to draw</a></li>
+      <li><a href="https://www.notion.so/Re-Coded-UI-UX-Design-Challange-a8822b149b2e4327a7faa1005ab5bbb6?pvs=21">Re:Coded - UI UX Design Challange</a></li>
+      <li><a href="https://www.notion.so/PsyNCog-ULiege-b3aabfb890124334bbd05d540924c3b8?pvs=21">PsyNCog ULiege</a></li>
+      <li><a href="/notes/psychopy-experiment-design-workshop/">PsychoPy_Experiment_Design_Workshop</a></li>
+      <li><a href="https://www.notion.so/fadfd903a94e483d9aa9860207bee92c?pvs=21">Role of Expectation on Perceived Time of Visual Events</a></li>
+    </ul>
+  </section>
+</BaseLayout>
+
+<style>
+  .home-hero{
+    display:grid;
+    grid-template-columns: 1.05fr .95fr;
+    gap: 1.1rem;
+    align-items: start;
+  }
+  .banner{ padding: 0; overflow:hidden; }
+  .banner img{
+    width: 100%;
+    height: 375px;
+    object-fit: cover;
+    display:block;
+  }
+  .hero-copy{ padding: .25rem .2rem 0; }
+  .lead{
+    font-size: 1.08rem;
+    color: color-mix(in srgb, var(--text) 90%, var(--muted) 10%);
+    max-width: 70ch;
+  }
+  .bullets{ margin: .75rem 0 1rem; color: var(--muted); }
+  .cta{ display:flex; gap:.5rem; flex-wrap: wrap; margin: .85rem 0 .25rem; }
+  .chips{ display:flex; flex-wrap: wrap; gap:.4rem; margin-top: .6rem; }
+  .chip{
+    border: 1px solid var(--border);
+    background: var(--surface);
+    padding: .32rem .6rem;
+    border-radius: 999px;
+    color: var(--text);
+    text-decoration:none;
+    font-size: .92rem;
+  }
+  .chip:hover{ text-decoration:none; filter: brightness(.99); }
+  .section{ margin-top: 1.45rem; }
+
+  .projects{ display:grid; grid-template-columns: repeat(2, 1fr); gap: .9rem; }
+  .project{ padding: 1rem; }
+  .project h3{ margin: .1rem 0 .6rem; font-size: 1.15rem; }
+  .project-chips{ display:flex; flex-wrap: wrap; gap:.4rem; margin-bottom: .75rem; }
+  .media{
+    border-radius: 12px;
+    overflow:hidden;
+    border: 1px solid var(--border);
+    background: #000;
+  }
+  .frame{
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border: 0;
+    display:block;
+  }
+  .img{
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    display:block;
+    background: #000;
+  }
+
+  .reveal{ opacity: 0; transform: translateY(14px); transition: opacity .4s ease, transform .4s ease; }
+  .reveal.is-visible{ opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 980px){
+    .home-hero{ grid-template-columns: 1fr; }
+    .projects{ grid-template-columns: 1fr; }
+  }
+</style>
+
+<script>
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) e.target.classList.add("is-visible");
+      });
+    },
+    { threshold: 0.16 }
+  );
+  document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
+</script>
+
