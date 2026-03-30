@@ -3,6 +3,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import fs from "node:fs/promises";
 import path from "node:path";
 import posterCache from "../../data/letterboxd-posters.json";
+import countriesCache from "../../data/letterboxd-countries.json";
 
 const diaryPath = path.resolve(
   process.cwd(),
@@ -110,6 +111,15 @@ async function posterFor(letterboxdUri) {
   }
 }
 
+function countrySlugsFor(letterboxdUri) {
+  const normalized = normalizeUri(letterboxdUri);
+  const rec = countriesCache?.[normalized] ?? countriesCache?.[letterboxdUri] ?? null;
+  const codes = rec?.countryCodes ?? [];
+  if (Array.isArray(codes) && codes.length) return codes;
+  const slugs = rec?.countries ?? [];
+  return Array.isArray(slugs) ? slugs : [];
+}
+
 // Diary should behave like a filter on top of watched.
 // In your exports, `Letterboxd URI` can differ between `watched.csv` and `diary.csv`
 // even for the same movie, so we key by `Name + Year` instead.
@@ -181,6 +191,7 @@ const movies = await Promise.all(
     const { id, poster } = await posterFor(m.letterboxdUri);
     const watchedDisplay = diary?.watchedDate || m.watchedDate || "";
     const watchedIso = diary?.watchedDateIso || toIsoDate(m.watchedDate ?? "");
+    const countries = countrySlugsFor(m.letterboxdUri);
     return {
       ...m,
       id,
@@ -188,6 +199,7 @@ const movies = await Promise.all(
       rating: diary ? diary.rating : null,
       watchedDate: watchedDisplay,
       watchedDateIso: watchedIso,
+      countries,
       diaryRated: diary?.rating != null
     };
   })
@@ -218,9 +230,19 @@ const months = Array.from(
 
 <BaseLayout title="Watched movies" description="My watched movies (Letterboxd export)." wide>
   <h1>Watched movies</h1>
-  <p>
-    Built from my Letterboxd export (<code>watched.csv</code> + <code>diary.csv</code>). Diary is a filter over watched.
-  </p>
+
+  <div class="card mapWrap">
+    <div class="mapHeader">
+      <div>
+        <div class="mapTitle">Country map</div>
+        <div class="mapSub">Click a country to filter movies.</div>
+      </div>
+      <button id="clearCountry" class="btn" type="button">Clear</button>
+    </div>
+    <div id="map" class="map"></div>
+    <div class="mapMeta"><span id="countryLabel"></span></div>
+  </div>
+
 
   <div class="controls card">
     <div class="row">
@@ -303,6 +325,7 @@ const months = Array.from(
         data-watched={m.watchedDateIso ?? ""}
         data-month={(m.watchedDateIso ?? "").slice(0, 7)}
         data-diary={m.diaryRated ? "1" : ""}
+        data-countries={(m.countries ?? []).join(",")}
       >
         <a class="poster" href={m.letterboxdUri} target="_blank" rel="noopener">
           {m.poster ? (
@@ -330,6 +353,32 @@ const months = Array.from(
 </BaseLayout>
 
 <style>
+  .mapWrap{
+    padding: 1rem 1rem .85rem;
+    margin-top: .9rem;
+  }
+  .mapHeader{
+    display:flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: .6rem;
+  }
+  .mapTitle{ font-weight: 650; letter-spacing: -0.01em; }
+  .mapSub{ color: var(--muted); font-size: .95rem; margin-top: .15rem; }
+  .map{ width: 100%; min-height: 340px; }
+  .mapMeta{ margin-top: .6rem; color: var(--muted); font-size: .95rem; }
+  .btn{
+    padding: .5rem .7rem;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font: inherit;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
   .controls{
     padding: 1rem 1rem .85rem;
     margin-top: .9rem;
@@ -436,6 +485,8 @@ const months = Array.from(
   }
 </style>
 
+<link rel="stylesheet" href="https://unpkg.com/svgmap@latest/dist/svgMap.min.css" />
+
 <script>
   const grid = document.getElementById("grid");
   const items = Array.from(grid.querySelectorAll(".movie"));
@@ -447,6 +498,11 @@ const months = Array.from(
   const month = document.getElementById("month");
   const sort = document.getElementById("sort");
   const count = document.getElementById("count");
+  const mapEl = document.getElementById("map");
+  const clearCountry = document.getElementById("clearCountry");
+  const countryLabel = document.getElementById("countryLabel");
+
+  let selectedCountry = "";
 
   function num(v) {
     const n = Number(v);
@@ -467,8 +523,10 @@ const months = Array.from(
       const rating = num(el.dataset.rating);
       const diaryRated = el.dataset.diary === "1";
       const mth = el.dataset.month || "";
+      const countries = (el.dataset.countries || "").split(",").filter(Boolean);
 
       if (viewMode === "diary" && !diaryRated) return false;
+      if (selectedCountry && !countries.includes(selectedCountry)) return false;
       if (query && !title.includes(query)) return false;
       if (minR != null && (rating == null || rating < minR)) return false;
       if (year != null && (year < yMin || year > yMax)) return false;
@@ -500,9 +558,81 @@ const months = Array.from(
     count.textContent = `${visible.length} / ${items.length} movies`;
   }
 
+  function buildCountryCounts() {
+    const counts = new Map();
+    items.forEach((el) => {
+      const list = (el.dataset.countries || "").split(",").filter(Boolean);
+      list.forEach((c) => counts.set(c, (counts.get(c) ?? 0) + 1));
+    });
+    const values = {};
+    // Use svgMap's built-in `link` handling for clicks. We'll read the hash and
+    // apply filtering on `hashchange`.
+    counts.forEach((n, c) => {
+      values[c] = { total: n, link: `#country=${encodeURIComponent(c)}` };
+    });
+    return values;
+  }
+
+  function setSelectedCountry(code) {
+    selectedCountry = code || "";
+    countryLabel.textContent = selectedCountry ? `Country: ${selectedCountry}` : "";
+    apply();
+  }
+
+  function syncCountryFromHash() {
+    const m = (location.hash || "").match(/(?:^|#)country=([A-Z]{2})/);
+    setSelectedCountry(m?.[1] ?? "");
+  }
+
+  function initMap() {
+    if (!mapEl) return;
+    const values = buildCountryCounts();
+    const create = () => {
+      if (!window.svgMap) return;
+      // eslint-disable-next-line no-new
+      new window.svgMap({
+        targetElementID: "map",
+        touchLink: true,
+        data: {
+          data: { total: { name: "Movies" } },
+          applyData: "total",
+          values
+        }
+      });
+    };
+
+    if (window.svgMap) {
+      create();
+      return;
+    }
+
+    const existing = document.querySelector('script[data-svgmap="1"]');
+    if (existing) {
+      existing.addEventListener("load", create, { once: true });
+      return;
+    }
+
+    const s = document.createElement("script");
+    s.src = "https://unpkg.com/svgmap@latest/dist/svgMap.min.js";
+    s.async = true;
+    s.dataset.svgmap = "1";
+    s.addEventListener("load", create, { once: true });
+    document.head.appendChild(s);
+  }
+
   [view, q, minRating, yearMin, yearMax, month, sort].forEach((el) =>
     el.addEventListener("input", apply)
   );
+
+  clearCountry?.addEventListener("click", () => {
+    history.replaceState(null, "", location.pathname + location.search);
+    syncCountryFromHash();
+  });
+
+  window.addEventListener("hashchange", syncCountryFromHash);
+
+  initMap();
+  syncCountryFromHash();
   apply();
 </script>
 
