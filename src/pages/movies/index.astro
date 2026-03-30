@@ -96,48 +96,112 @@ function normalizeUri(uri) {
 }
 
 async function posterFor(letterboxdUri) {
-  const id = (letterboxdUri ?? "").trim().split("/").filter(Boolean).pop() ?? "";
+  const normalized = normalizeUri(letterboxdUri);
+  const id = (normalized ?? "").trim().split("/").filter(Boolean).pop() ?? "";
   if (!id) return { id: "", poster: null };
   const candidate = path.join(posterDir, `${id}.jpg`);
   try {
     await fs.access(candidate);
     return { id, poster: `/assets/movies/posters/${id}.jpg` };
   } catch {
-    const cached = posterCache?.[letterboxdUri] ?? null;
+    // Cache keys in `letterboxd-posters.json` may or may not include trailing slashes.
+    const cached = posterCache?.[normalized] ?? posterCache?.[letterboxdUri] ?? null;
     return { id, poster: cached };
   }
 }
 
-// Merge diary into watched to avoid duplicates:
-// - `watched.csv` is the base list (ALL watched)
-// - `diary.csv` only adds rating + diary membership for a subset
-const mergedByUri = new Map();
-for (const m of watchedMoviesRaw) {
-  const uri = normalizeUri(m.letterboxdUri);
-  if (!uri) continue;
-  mergedByUri.set(uri, { ...m, letterboxdUri: uri });
+// Diary should behave like a filter on top of watched.
+// In your exports, `Letterboxd URI` can differ between `watched.csv` and `diary.csv`
+// even for the same movie, so we key by `Name + Year` instead.
+function movieKey(m) {
+  const name = (m.name ?? "").trim().toLowerCase();
+  const year = m.year ?? "";
+  return name ? `${name}|${year}` : "";
 }
-for (const m of diaryMoviesRaw) {
-  const uri = normalizeUri(m.letterboxdUri);
-  if (!uri) continue;
-  const existing = mergedByUri.get(uri);
-  if (existing) {
-    mergedByUri.set(uri, {
-      ...existing,
-      rating: m.rating,
-      watchedDate: m.watchedDate || existing.watchedDate,
-    });
-  } else {
-    mergedByUri.set(uri, { ...m, letterboxdUri: uri });
+
+function toIsoDate(s) {
+  const v = (s ?? "").trim();
+  if (!v) return "";
+  // Already ISO
+  if (/^\d{4}-\d{2}-\d{2}$/.test(v)) return v;
+  // Common US export formats: M/D/YY, M/D/YYYY
+  const m = v.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2}|\d{4})$/);
+  if (m) {
+    const mm = Number(m[1]);
+    const dd = Number(m[2]);
+    const yyRaw = m[3];
+    const yyyy =
+      yyRaw.length === 4 ? Number(yyRaw) : 2000 + Number(yyRaw); // assume 20xx
+    if (
+      Number.isFinite(mm) &&
+      Number.isFinite(dd) &&
+      Number.isFinite(yyyy) &&
+      mm >= 1 &&
+      mm <= 12 &&
+      dd >= 1 &&
+      dd <= 31
+    ) {
+      return `${String(yyyy).padStart(4, "0")}-${String(mm).padStart(2, "0")}-${String(dd).padStart(2, "0")}`;
+    }
   }
+  return "";
+}
+
+const diaryByKey = new Map();
+for (const m of diaryMoviesRaw) {
+  const key = movieKey(m);
+  if (!key) continue;
+  diaryByKey.set(key, {
+    rating: m.rating,
+    watchedDate: m.watchedDate ?? "",
+    watchedDateIso: toIsoDate(m.watchedDate ?? "")
+  });
+}
+
+const watchedByKey = new Map();
+for (const m of watchedMoviesRaw) {
+  const key = movieKey(m);
+  if (!key) continue;
+  const prev = watchedByKey.get(key);
+  if (!prev) {
+    watchedByKey.set(key, m);
+    continue;
+  }
+  // If there are multiple watched rows per title/year (unlikely), keep the one
+  // with the most recent watched date for sorting.
+  const prevIso = toIsoDate(prev.watchedDate ?? "");
+  const nextIso = toIsoDate(m.watchedDate ?? "");
+  if (nextIso && nextIso >= prevIso) watchedByKey.set(key, m);
 }
 
 const movies = await Promise.all(
-  Array.from(mergedByUri.values()).map(async (m) => {
+  Array.from(watchedByKey.values()).map(async (m) => {
+    const key = movieKey(m);
+    const diary = diaryByKey.get(key);
     const { id, poster } = await posterFor(m.letterboxdUri);
-    return { ...m, id, poster, diaryRated: m.rating != null };
+    const watchedDisplay = diary?.watchedDate || m.watchedDate || "";
+    const watchedIso = diary?.watchedDateIso || toIsoDate(m.watchedDate ?? "");
+    return {
+      ...m,
+      id,
+      poster,
+      rating: diary ? diary.rating : null,
+      watchedDate: watchedDisplay,
+      watchedDateIso: watchedIso,
+      diaryRated: diary?.rating != null
+    };
   })
 );
+
+// Sort server-side so the initial HTML is correct even before JS runs.
+// Important: do NOT use rating for ordering.
+movies.sort((a, b) => {
+  const wd = (b.watchedDateIso || "").localeCompare(a.watchedDateIso || "");
+  if (wd) return wd;
+  const yd = (b.year ?? -1) - (a.year ?? -1);
+  if (yd) return yd;
+  return (a.name || "").localeCompare(b.name || "");
+});
 
 const years = movies.map((m) => m.year).filter(Boolean);
 const minYear = years.length ? Math.min(...years) : 1900;
@@ -146,7 +210,7 @@ const maxYear = years.length ? Math.max(...years) : new Date().getFullYear();
 const months = Array.from(
   new Set(
     movies
-      .map((m) => (m.watchedDate || "").slice(0, 7))
+      .map((m) => (m.watchedDateIso || "").slice(0, 7))
       .filter((x) => /^\d{4}-\d{2}$/.test(x))
   )
 ).sort((a, b) => b.localeCompare(a));
@@ -236,8 +300,8 @@ const months = Array.from(
         data-title={m.name.toLowerCase()}
         data-year={m.year ?? ""}
         data-rating={m.rating ?? ""}
-        data-watched={m.watchedDate ?? ""}
-        data-month={(m.watchedDate ?? "").slice(0, 7)}
+        data-watched={m.watchedDateIso ?? ""}
+        data-month={(m.watchedDateIso ?? "").slice(0, 7)}
         data-diary={m.diaryRated ? "1" : ""}
       >
         <a class="poster" href={m.letterboxdUri} target="_blank" rel="noopener">
