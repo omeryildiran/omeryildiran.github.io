@@ -1,9 +1,106 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2026-03-27T03:39:40-04:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Omer Yildiran</title><subtitle>PhD Candidate in Cognition &amp; Perception at NYU | Time perception, sensory modeling, adaptive learning</subtitle><author><name>Omer Yildiran</name></author><entry><title type="html">How to run Jekyll my version</title><link href="http://localhost:4000/2025/07/01/myHowTo.html" rel="alternate" type="text/html" title="How to run Jekyll my version" /><published>2025-07-01T00:00:00-04:00</published><updated>2025-07-01T00:00:00-04:00</updated><id>http://localhost:4000/2025/07/01/myHowTo</id><content type="html" xml:base="http://localhost:4000/2025/07/01/myHowTo.html"><![CDATA[<p>Hello this is my:</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://omeryildiran.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://omeryildiran.github.io/" rel="alternate" type="text/html" /><updated>2026-03-30T12:10:52-04:00</updated><id>https://omeryildiran.github.io/feed.xml</id><title type="html">Omer Yildiran</title><subtitle>PhD Candidate in Cognition &amp; Perception at NYU | Time perception, sensory modeling, adaptive learning</subtitle><author><name>Omer Yildiran</name></author><entry><title type="html">Luminance Measurement with ColorCAL 3</title><link href="https://omeryildiran.github.io/2026/03/28/luminance-measurement-with-colorcal-3-quick-guide.html" rel="alternate" type="text/html" title="Luminance Measurement with ColorCAL 3" /><published>2026-03-28T00:00:00-04:00</published><updated>2026-03-28T00:00:00-04:00</updated><id>https://omeryildiran.github.io/2026/03/28/luminance-measurement-with-colorcal-3-quick-guide</id><content type="html" xml:base="https://omeryildiran.github.io/2026/03/28/luminance-measurement-with-colorcal-3-quick-guide.html"><![CDATA[<p>This guide explains how to measure luminance (<code class="language-plaintext highlighter-rouge">cd/m^2</code>) of visual stimuli for reporting purposes.</p>
+
+<h2 id="step-0-update-firmware-only-if-needed">Step 0: Update firmware only if needed</h2>
+
+<p>If your computer does not recognize the device, you may need to update the firmware. In many cases, the ColorCAL 3 is detected automatically.</p>
+
+<h2 id="1-manual-method">1. Manual method</h2>
+
+<p>This method is simple and fast. If your stimulus contains only a few components, such as a background and a disk, and you only want to report luminance values in a paper, this is usually enough.</p>
+
+<h3 id="setup">Setup</h3>
+
+<ul>
+  <li>Use the same display and settings as in the experiment.</li>
+  <li>Present stimuli full-screen.</li>
+</ul>
+
+<h3 id="connection">Connection</h3>
+
+<ol>
+  <li>Plug in the ColorCAL 3.</li>
+  <li>In Terminal, list connected USB devices:</li>
+</ol>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">ls</span> /dev/tty.usb<span class="k">*</span>
+</code></pre></div></div>
+
+<p>This command will list devices connected through USB. Find the one named something like <code class="language-plaintext highlighter-rouge">usbmodemXXXX</code>.</p>
+
+<ol>
+  <li>Connect to the device:</li>
+</ol>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>screen /dev/tty.usbmodemXXXX
+</code></pre></div></div>
+
+<ol>
+  <li>Type <code class="language-plaintext highlighter-rouge">?</code> and press Enter to open the device menu and confirm the connection.</li>
+</ol>
+
+<p><img src="/assets/images/colorcal/colorcal-device-menu.png" alt="ColorCAL 3 device menu" /></p>
+
+<p>At that point, the device is ready to take measurements.</p>
+
+<h3 id="measurement">Measurement</h3>
+
+<ol>
+  <li>Display the stimulus you want to measure, such as the background or the target.</li>
+  <li>Place the device flat at the center of the screen.</li>
+  <li>Type <code class="language-plaintext highlighter-rouge">M</code> and press Enter. The <code class="language-plaintext highlighter-rouge">M</code> may not be visible in the terminal.</li>
+  <li>The device output should look like this:</li>
+</ol>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>OK00, Y, x, y
+</code></pre></div></div>
+
+<p><img src="/assets/images/colorcal/colorcal-measurement-output.png" alt="ColorCAL 3 measurement output" /></p>
+
+<p>Use <code class="language-plaintext highlighter-rouge">Y</code> as the luminance value in <code class="language-plaintext highlighter-rouge">cd/m^2</code>.</p>
+
+<ul>
+  <li>Take <code class="language-plaintext highlighter-rouge">5</code> to <code class="language-plaintext highlighter-rouge">10</code> measurements per condition.</li>
+  <li>Record the values and compute the mean.</li>
+</ul>
+
+<hr />
+
+<h2 id="2-automated-method-with-psychopy">2. Automated method with PsychoPy</h2>
+
+<p>Use this method if you want to record luminance values repeatedly from code.</p>
+
+<h3 id="setup-1">Setup</h3>
+
+<ul>
+  <li>Plug the ColorCAL 3 into the experiment computer.</li>
+  <li>Use the same display settings as in the experiment.</li>
+</ul>
+
+<h3 id="example-code">Example code</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">psychopy.hardware.crs.colorcal</span> <span class="kn">import</span> <span class="n">ColorCAL</span>
+<span class="kn">from</span> <span class="n">psychopy</span> <span class="kn">import</span> <span class="n">visual</span>
+
+<span class="n">win</span> <span class="o">=</span> <span class="n">visual</span><span class="p">.</span><span class="nc">Window</span><span class="p">(</span><span class="n">fullscr</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">cc</span> <span class="o">=</span> <span class="nc">ColorCAL</span><span class="p">()</span>
+
+<span class="c1"># Example stimulus
+</span><span class="n">stim</span> <span class="o">=</span> <span class="n">visual</span><span class="p">.</span><span class="nc">Rect</span><span class="p">(</span><span class="n">win</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">fillColor</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+
+<span class="n">levels</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">level</span> <span class="ow">in</span> <span class="n">levels</span><span class="p">:</span>
+    <span class="n">stim</span><span class="p">.</span><span class="n">fillColor</span> <span class="o">=</span> <span class="p">[</span><span class="n">level</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">level</span><span class="p">]</span>
+    <span class="n">stim</span><span class="p">.</span><span class="nf">draw</span><span class="p">()</span>
+    <span class="n">win</span><span class="p">.</span><span class="nf">flip</span><span class="p">()</span>
+    <span class="n">luminance</span> <span class="o">=</span> <span class="n">cc</span><span class="p">.</span><span class="nf">getLum</span><span class="p">()</span>
+    <span class="nf">print</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">luminance</span><span class="p">)</span>
+</code></pre></div></div>]]></content><author><name>Omer Yildiran</name></author><summary type="html"><![CDATA[This guide explains how to measure luminance (cd/m^2) of visual stimuli for reporting purposes.]]></summary></entry><entry><title type="html">How to run Jekyll my version</title><link href="https://omeryildiran.github.io/2025/07/01/myHowTo.html" rel="alternate" type="text/html" title="How to run Jekyll my version" /><published>2025-07-01T00:00:00-04:00</published><updated>2025-07-01T00:00:00-04:00</updated><id>https://omeryildiran.github.io/2025/07/01/myHowTo</id><content type="html" xml:base="https://omeryildiran.github.io/2025/07/01/myHowTo.html"><![CDATA[<p>Hello this is my:</p>
 <h1 id="how-to-run-my-site-short-terminal-arguments">How to run my site short terminal arguments</h1>
 <p>chruby ruby-3.4.1<br />
 ruby -v<br />
 cd ofyWeb<br />
-bundle exec jekyll serve</p>]]></content><author><name>Omer Yildiran</name></author><summary type="html"><![CDATA[Hello this is my: How to run my site short terminal arguments chruby ruby-3.4.1 ruby -v cd ofyWeb bundle exec jekyll serve]]></summary></entry><entry><title type="html">Models of Bimodal Duration Estimation</title><link href="http://localhost:4000/2025/07/01/Models-of-Bimodal-Duration-Discrimination-new.html" rel="alternate" type="text/html" title="Models of Bimodal Duration Estimation" /><published>2025-07-01T00:00:00-04:00</published><updated>2025-07-01T00:00:00-04:00</updated><id>http://localhost:4000/2025/07/01/Models%20of%20Bimodal%20Duration%20Discrimination%20new</id><content type="html" xml:base="http://localhost:4000/2025/07/01/Models-of-Bimodal-Duration-Discrimination-new.html"><![CDATA[<h1 id="model-coding">Model Coding:</h1>
+bundle exec jekyll serve</p>]]></content><author><name>Omer Yildiran</name></author><summary type="html"><![CDATA[Hello this is my: How to run my site short terminal arguments chruby ruby-3.4.1 ruby -v cd ofyWeb bundle exec jekyll serve]]></summary></entry><entry><title type="html">Models of Bimodal Duration Estimation</title><link href="https://omeryildiran.github.io/2025/07/01/Models-of-Bimodal-Duration-Discrimination-new.html" rel="alternate" type="text/html" title="Models of Bimodal Duration Estimation" /><published>2025-07-01T00:00:00-04:00</published><updated>2025-07-01T00:00:00-04:00</updated><id>https://omeryildiran.github.io/2025/07/01/Models%20of%20Bimodal%20Duration%20Discrimination%20new</id><content type="html" xml:base="https://omeryildiran.github.io/2025/07/01/Models-of-Bimodal-Duration-Discrimination-new.html"><![CDATA[<h1 id="model-coding">Model Coding:</h1>
 
 <p>Created: June 18, 2025 6:09 PM
 Tags: article note</p>
