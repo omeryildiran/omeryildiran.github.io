@@ -6,6 +6,7 @@ const exportDir = path.resolve(
   "use_these_ai/letterboxd_export_oyildiran"
 );
 const diaryPath = path.join(exportDir, "diary.csv");
+const watchedPath = path.join(exportDir, "watched.csv");
 const outPath = path.resolve(process.cwd(), "src/data/letterboxd-posters.json");
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -59,20 +60,27 @@ function pickOgImage(html) {
 }
 
 async function main() {
-  const csv = await fs.readFile(diaryPath, "utf-8");
-  const rows = parseCsv(csv);
-  const header = rows[0] ?? [];
-  const uriIdx = header.indexOf("Letterboxd URI");
-  if (uriIdx < 0) throw new Error("Letterboxd URI column not found in diary.csv");
-
-  const uris = Array.from(
-    new Set(
+  async function urisFromCsv(csvPath) {
+    const csv = await fs.readFile(csvPath, "utf-8");
+    const rows = parseCsv(csv);
+    const header = rows[0] ?? [];
+    const uriIdx = header.indexOf("Letterboxd URI");
+    if (uriIdx < 0) {
+      throw new Error(`Letterboxd URI column not found in ${path.basename(csvPath)}`);
+    }
+    return new Set(
       rows
         .slice(1)
         .map((r) => (r[uriIdx] ?? "").trim())
         .filter(Boolean)
-    )
-  );
+    );
+  }
+
+  const diaryUris = await urisFromCsv(diaryPath);
+  const watchedUris = await urisFromCsv(watchedPath);
+  const uris = Array.from(new Set([...diaryUris, ...watchedUris]));
+
+  console.log(`Posters: diary=${diaryUris.size}, watched=${watchedUris.size}, total=${uris.length}`);
 
   let existing = {};
   try {

@@ -88,9 +88,13 @@ function buildFromWatched(csvText) {
 
 const diaryMoviesRaw = buildFromDiary(diaryCsv);
 const watchedMoviesRaw = buildFromWatched(watchedCsv);
-const idx = (name) => header.indexOf(name);
 
 const posterDir = path.resolve(process.cwd(), "public/assets/movies/posters");
+
+function normalizeUri(uri) {
+  return (uri ?? "").trim().replace(/\/+$/g, "");
+}
+
 async function posterFor(letterboxdUri) {
   const id = (letterboxdUri ?? "").trim().split("/").filter(Boolean).pop() ?? "";
   if (!id) return { id: "", poster: null };
@@ -104,21 +108,36 @@ async function posterFor(letterboxdUri) {
   }
 }
 
-const diaryMovies = await Promise.all(
-  diaryMoviesRaw.map(async (m) => {
+// Merge diary into watched to avoid duplicates:
+// - `watched.csv` is the base list (ALL watched)
+// - `diary.csv` only adds rating + diary membership for a subset
+const mergedByUri = new Map();
+for (const m of watchedMoviesRaw) {
+  const uri = normalizeUri(m.letterboxdUri);
+  if (!uri) continue;
+  mergedByUri.set(uri, { ...m, letterboxdUri: uri });
+}
+for (const m of diaryMoviesRaw) {
+  const uri = normalizeUri(m.letterboxdUri);
+  if (!uri) continue;
+  const existing = mergedByUri.get(uri);
+  if (existing) {
+    mergedByUri.set(uri, {
+      ...existing,
+      rating: m.rating,
+      watchedDate: m.watchedDate || existing.watchedDate,
+    });
+  } else {
+    mergedByUri.set(uri, { ...m, letterboxdUri: uri });
+  }
+}
+
+const movies = await Promise.all(
+  Array.from(mergedByUri.values()).map(async (m) => {
     const { id, poster } = await posterFor(m.letterboxdUri);
-    return { ...m, id, poster, source: "diary" };
+    return { ...m, id, poster, diaryRated: m.rating != null };
   })
 );
-
-const watchedMovies = await Promise.all(
-  watchedMoviesRaw.map(async (m) => {
-    const { id, poster } = await posterFor(m.letterboxdUri);
-    return { ...m, id, poster, source: "watched" };
-  })
-);
-
-const movies = [...diaryMovies, ...watchedMovies];
 
 const years = movies.map((m) => m.year).filter(Boolean);
 const minYear = years.length ? Math.min(...years) : 1900;
@@ -136,7 +155,7 @@ const months = Array.from(
 <BaseLayout title="Watched movies" description="My watched movies (Letterboxd export)." wide>
   <h1>Watched movies</h1>
   <p>
-    Built from my Letterboxd export (<code>diary.csv</code>). Use search, filters, and sorting below.
+    Built from my Letterboxd export (<code>watched.csv</code> + <code>diary.csv</code>). Diary is a filter over watched.
   </p>
 
   <div class="controls card">
@@ -144,9 +163,8 @@ const months = Array.from(
       <label class="field">
         <span>View</span>
         <select id="view">
+          <option value="watched" selected>Watched (all)</option>
           <option value="diary">Diary (rated entries)</option>
-          <option value="watched">Watched (all)</option>
-          <option value="all">All (merged)</option>
         </select>
       </label>
 
@@ -220,7 +238,7 @@ const months = Array.from(
         data-rating={m.rating ?? ""}
         data-watched={m.watchedDate ?? ""}
         data-month={(m.watchedDate ?? "").slice(0, 7)}
-        data-source={m.source}
+        data-diary={m.diaryRated ? "1" : ""}
       >
         <a class="poster" href={m.letterboxdUri} target="_blank" rel="noopener">
           {m.poster ? (
@@ -383,10 +401,10 @@ const months = Array.from(
       const title = el.dataset.title || "";
       const year = num(el.dataset.year);
       const rating = num(el.dataset.rating);
-      const src = el.dataset.source || "";
+      const diaryRated = el.dataset.diary === "1";
       const mth = el.dataset.month || "";
 
-      if (viewMode !== "all" && src !== viewMode) return false;
+      if (viewMode === "diary" && !diaryRated) return false;
       if (query && !title.includes(query)) return false;
       if (minR != null && (rating == null || rating < minR)) return false;
       if (year != null && (year < yMin || year > yMax)) return false;
