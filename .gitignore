@@ -12,3 +12,6 @@ pnpm-debug.log*
 _site/
 .jekyll-cache/
 vendor/
+
+# Large media exports (keep out of deploys)
+use_these_ai/*.mp4

@@ -1,0 +1,430 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import fs from "node:fs/promises";
+import path from "node:path";
+import posterCache from "../../data/letterboxd-posters.json";
+
+const diaryPath = path.resolve(
+  process.cwd(),
+  "use_these_ai/letterboxd_export_oyildiran/diary.csv"
+);
+const watchedPath = path.resolve(
+  process.cwd(),
+  "use_these_ai/letterboxd_export_oyildiran/watched.csv"
+);
+const diaryCsv = await fs.readFile(diaryPath, "utf-8");
+const watchedCsv = await fs.readFile(watchedPath, "utf-8");
+
+function parseCsv(text) {
+  // Minimal CSV parser for Letterboxd exports (handles quoted commas).
+  const rows = [];
+  let row = [];
+  let field = "";
+  let inQuotes = false;
+
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    const next = text[i + 1];
+
+    if (c === '"' && inQuotes && next === '"') {
+      field += '"';
+      i++;
+      continue;
+    }
+    if (c === '"') {
+      inQuotes = !inQuotes;
+      continue;
+    }
+    if (!inQuotes && (c === "," || c === "\n" || c === "\r")) {
+      if (c === "\r" && next === "\n") continue;
+      row.push(field);
+      field = "";
+      if (c === "\n") {
+        if (row.length > 1 || row[0] !== "") rows.push(row);
+        row = [];
+      }
+      continue;
+    }
+    field += c;
+  }
+  row.push(field);
+  if (row.length > 1 || row[0] !== "") rows.push(row);
+  return rows;
+}
+
+function buildFromDiary(csvText) {
+  const rows = parseCsv(csvText);
+  const header = rows[0] ?? [];
+  const idx = (name) => header.indexOf(name);
+
+  return rows
+    .slice(1)
+    .map((r) => ({
+      name: r[idx("Name")] ?? "",
+      year: Number(r[idx("Year")] ?? "") || null,
+      letterboxdUri: r[idx("Letterboxd URI")] ?? "",
+      rating: r[idx("Rating")] ? Number(r[idx("Rating")]) : null,
+      watchedDate: r[idx("Watched Date")] ?? ""
+    }))
+    .filter((m) => m.name);
+}
+
+function buildFromWatched(csvText) {
+  const rows = parseCsv(csvText);
+  const header = rows[0] ?? [];
+  const idx = (name) => header.indexOf(name);
+
+  return rows
+    .slice(1)
+    .map((r) => ({
+      name: r[idx("Name")] ?? "",
+      year: Number(r[idx("Year")] ?? "") || null,
+      letterboxdUri: r[idx("Letterboxd URI")] ?? "",
+      rating: null,
+      watchedDate: r[idx("Date")] ?? ""
+    }))
+    .filter((m) => m.name);
+}
+
+const diaryMoviesRaw = buildFromDiary(diaryCsv);
+const watchedMoviesRaw = buildFromWatched(watchedCsv);
+const idx = (name) => header.indexOf(name);
+
+const posterDir = path.resolve(process.cwd(), "public/assets/movies/posters");
+async function posterFor(letterboxdUri) {
+  const id = (letterboxdUri ?? "").trim().split("/").filter(Boolean).pop() ?? "";
+  if (!id) return { id: "", poster: null };
+  const candidate = path.join(posterDir, `${id}.jpg`);
+  try {
+    await fs.access(candidate);
+    return { id, poster: `/assets/movies/posters/${id}.jpg` };
+  } catch {
+    const cached = posterCache?.[letterboxdUri] ?? null;
+    return { id, poster: cached };
+  }
+}
+
+const diaryMovies = await Promise.all(
+  diaryMoviesRaw.map(async (m) => {
+    const { id, poster } = await posterFor(m.letterboxdUri);
+    return { ...m, id, poster, source: "diary" };
+  })
+);
+
+const watchedMovies = await Promise.all(
+  watchedMoviesRaw.map(async (m) => {
+    const { id, poster } = await posterFor(m.letterboxdUri);
+    return { ...m, id, poster, source: "watched" };
+  })
+);
+
+const movies = [...diaryMovies, ...watchedMovies];
+
+const years = movies.map((m) => m.year).filter(Boolean);
+const minYear = years.length ? Math.min(...years) : 1900;
+const maxYear = years.length ? Math.max(...years) : new Date().getFullYear();
+
+const months = Array.from(
+  new Set(
+    movies
+      .map((m) => (m.watchedDate || "").slice(0, 7))
+      .filter((x) => /^\d{4}-\d{2}$/.test(x))
+  )
+).sort((a, b) => b.localeCompare(a));
+---
+
+<BaseLayout title="Watched movies" description="My watched movies (Letterboxd export)." wide>
+  <h1>Watched movies</h1>
+  <p>
+    Built from my Letterboxd export (<code>diary.csv</code>). Use search, filters, and sorting below.
+  </p>
+
+  <div class="controls card">
+    <div class="row">
+      <label class="field">
+        <span>View</span>
+        <select id="view">
+          <option value="diary">Diary (rated entries)</option>
+          <option value="watched">Watched (all)</option>
+          <option value="all">All (merged)</option>
+        </select>
+      </label>
+
+      <label class="field">
+        <span>Search</span>
+        <input id="q" type="search" placeholder="Title…" />
+      </label>
+
+      <label class="field">
+        <span>Min rating</span>
+        <select id="minRating">
+          <option value="">Any</option>
+          <option value="0.5">0.5+</option>
+          <option value="1">1+</option>
+          <option value="1.5">1.5+</option>
+          <option value="2">2+</option>
+          <option value="2.5">2.5+</option>
+          <option value="3">3+</option>
+          <option value="3.5">3.5+</option>
+          <option value="4">4+</option>
+          <option value="4.5">4.5+</option>
+          <option value="5">5</option>
+        </select>
+      </label>
+
+      <label class="field">
+        <span>Year</span>
+        <div class="year">
+          <input id="yearMin" type="number" inputmode="numeric" min={minYear} max={maxYear} value={minYear} />
+          <span class="sep">–</span>
+          <input id="yearMax" type="number" inputmode="numeric" min={minYear} max={maxYear} value={maxYear} />
+        </div>
+      </label>
+
+      <label class="field">
+        <span>Month</span>
+        <select id="month">
+          <option value="">Any</option>
+          {months.map((m) => (
+            <option value={m}>{m}</option>
+          ))}
+        </select>
+      </label>
+
+      <label class="field">
+        <span>Sort</span>
+        <select id="sort">
+          <option value="watched_desc">Watched date ↓</option>
+          <option value="watched_asc">Watched date ↑</option>
+          <option value="rating_desc">Rating ↓</option>
+          <option value="rating_asc">Rating ↑</option>
+          <option value="title_asc">Title A→Z</option>
+          <option value="title_desc">Title Z→A</option>
+          <option value="year_desc">Year ↓</option>
+          <option value="year_asc">Year ↑</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="meta">
+      <span id="count"></span>
+      <span class="hint">
+        Posters: auto-filled from cached URLs. Optional local override:
+        <code>public/assets/movies/posters/&lt;boxd-id&gt;.jpg</code> (example: <code>h4cS.jpg</code>).
+      </span>
+    </div>
+  </div>
+
+  <div id="grid" class="grid" data-minyear={minYear} data-maxyear={maxYear}>
+    {movies.map((m) => (
+      <article
+        class="movie card"
+        data-title={m.name.toLowerCase()}
+        data-year={m.year ?? ""}
+        data-rating={m.rating ?? ""}
+        data-watched={m.watchedDate ?? ""}
+        data-month={(m.watchedDate ?? "").slice(0, 7)}
+        data-source={m.source}
+      >
+        <a class="poster" href={m.letterboxdUri} target="_blank" rel="noopener">
+          {m.poster ? (
+            <img loading="lazy" src={m.poster} alt={`${m.name} poster`} />
+          ) : (
+            <div class="placeholder" aria-hidden="true">
+              <span>{(m.name[0] ?? "•").toUpperCase()}</span>
+            </div>
+          )}
+        </a>
+        <div class="info">
+          <div class="title" title={m.name}>{m.name}</div>
+          <div class="sub">
+            <span>{m.year ?? "—"}</span>
+            <span class="dot" aria-hidden="true">·</span>
+            <span>{m.rating ?? "—"} ★</span>
+          </div>
+          <div class="watched">
+            Watched: <span class="mono">{m.watchedDate || "—"}</span>
+          </div>
+        </div>
+      </article>
+    ))}
+  </div>
+</BaseLayout>
+
+<style>
+  .controls{
+    padding: 1rem 1rem .85rem;
+    margin-top: .9rem;
+  }
+  .row{
+    display:grid;
+    grid-template-columns: .8fr 1.2fr .7fr 1fr 1fr .9fr;
+    gap: .75rem;
+    align-items:end;
+  }
+  .field span{
+    display:block;
+    font-size: .9rem;
+    color: var(--muted);
+    margin-bottom: .25rem;
+  }
+  input, select{
+    width: 100%;
+    padding: .55rem .65rem;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font: inherit;
+  }
+  .year{ display:flex; gap:.5rem; align-items:center; }
+  .sep{ color: var(--muted); }
+  .meta{
+    margin-top: .7rem;
+    display:flex;
+    justify-content: space-between;
+    gap: .75rem;
+    flex-wrap: wrap;
+    color: var(--muted);
+    font-size: .95rem;
+  }
+  .hint code{ font-size: .92em; }
+
+  .grid{
+    margin-top: 1rem;
+    display:grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: .85rem;
+  }
+  .movie{
+    padding: 0;
+    overflow: hidden;
+  }
+  .poster{
+    display:block;
+    border-bottom: 1px solid var(--border);
+    background: #0b1220;
+  }
+  .poster img{
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
+    display:block;
+  }
+  .placeholder{
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    display:grid;
+    place-items:center;
+    background: linear-gradient(135deg, color-mix(in srgb, var(--brand) 22%, #0b1220), #0b1220);
+    color: white;
+    font-weight: 750;
+    letter-spacing: -0.02em;
+    font-size: 2rem;
+  }
+  .info{ padding: .7rem .75rem .85rem; }
+  .title{
+    font-weight: 650;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+    display:-webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow:hidden;
+    min-height: 2.4em;
+  }
+  .sub{
+    margin-top: .35rem;
+    display:flex;
+    align-items:center;
+    gap: .4rem;
+    color: var(--muted);
+    font-size: .95rem;
+  }
+  .dot{ opacity: .8; }
+  .watched{
+    margin-top: .4rem;
+    color: var(--muted);
+    font-size: .9rem;
+  }
+  .mono{ font-family: var(--mono); }
+
+  @media (max-width: 1100px){
+    .grid{ grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .row{ grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 720px){
+    .grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+</style>
+
+<script>
+  const grid = document.getElementById("grid");
+  const items = Array.from(grid.querySelectorAll(".movie"));
+  const view = document.getElementById("view");
+  const q = document.getElementById("q");
+  const minRating = document.getElementById("minRating");
+  const yearMin = document.getElementById("yearMin");
+  const yearMax = document.getElementById("yearMax");
+  const month = document.getElementById("month");
+  const sort = document.getElementById("sort");
+  const count = document.getElementById("count");
+
+  function num(v) {
+    const n = Number(v);
+    return Number.isFinite(n) ? n : null;
+  }
+
+  function apply() {
+    const viewMode = view.value;
+    const query = (q.value || "").trim().toLowerCase();
+    const minR = minRating.value ? Number(minRating.value) : null;
+    const yMin = num(yearMin.value) ?? Number(grid.dataset.minyear);
+    const yMax = num(yearMax.value) ?? Number(grid.dataset.maxyear);
+    const monthVal = month.value || "";
+
+    let visible = items.filter((el) => {
+      const title = el.dataset.title || "";
+      const year = num(el.dataset.year);
+      const rating = num(el.dataset.rating);
+      const src = el.dataset.source || "";
+      const mth = el.dataset.month || "";
+
+      if (viewMode !== "all" && src !== viewMode) return false;
+      if (query && !title.includes(query)) return false;
+      if (minR != null && (rating == null || rating < minR)) return false;
+      if (year != null && (year < yMin || year > yMax)) return false;
+      if (monthVal && mth !== monthVal) return false;
+      return true;
+    });
+
+    const key = sort.value;
+    const cmp = {
+      watched_desc: (a, b) => (b.dataset.watched || "").localeCompare(a.dataset.watched || ""),
+      watched_asc: (a, b) => (a.dataset.watched || "").localeCompare(b.dataset.watched || ""),
+      rating_desc: (a, b) => (num(b.dataset.rating) ?? -1) - (num(a.dataset.rating) ?? -1),
+      rating_asc: (a, b) => (num(a.dataset.rating) ?? 99) - (num(b.dataset.rating) ?? 99),
+      title_asc: (a, b) => (a.dataset.title || "").localeCompare(b.dataset.title || ""),
+      title_desc: (a, b) => (b.dataset.title || "").localeCompare(a.dataset.title || ""),
+      year_desc: (a, b) => (num(b.dataset.year) ?? -1) - (num(a.dataset.year) ?? -1),
+      year_asc: (a, b) => (num(a.dataset.year) ?? 9999) - (num(b.dataset.year) ?? 9999)
+    }[key];
+
+    visible.sort(cmp);
+
+    // Hide all, then append visible in sorted order.
+    items.forEach((el) => (el.style.display = "none"));
+    visible.forEach((el) => {
+      el.style.display = "";
+      grid.appendChild(el);
+    });
+
+    count.textContent = `${visible.length} / ${items.length} movies`;
+  }
+
+  [view, q, minRating, yearMin, yearMax, month, sort].forEach((el) =>
+    el.addEventListener("input", apply)
+  );
+  apply();
+</script>
+
