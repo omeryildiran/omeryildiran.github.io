@@ -57,9 +57,9 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).to
     <Footer />
 
     <script is:inline>
-      const TRANSLATE_STORAGE_KEY = "preferred-language-session";
       const SOURCE_LANGUAGE = "en";
       const TARGET_LANGUAGE = "tr";
+      const DEFAULT_LANGUAGE = SOURCE_LANGUAGE;
 
       function setTranslateCookie(language) {
         const value = language === TARGET_LANGUAGE
@@ -73,10 +73,22 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).to
         }
       }
 
+      function getTranslateCookie() {
+        const match = document.cookie.match(/(?:^|;\s*)googtrans=([^;]+)/);
+        return match ? decodeURIComponent(match[1]) : "";
+      }
+
+      function getCurrentLanguage() {
+        return getTranslateCookie().includes(`/${SOURCE_LANGUAGE}/${TARGET_LANGUAGE}`)
+          ? TARGET_LANGUAGE
+          : SOURCE_LANGUAGE;
+      }
+
       function updateToggle(language) {
         const toggle = document.querySelector("[data-translate-toggle]");
-        const label = document.querySelector("[data-translate-label]");
         const translated = language === TARGET_LANGUAGE;
+        const enOption = document.querySelector('[data-translate-option="en"]');
+        const trOption = document.querySelector('[data-translate-option="tr"]');
 
         if (toggle instanceof HTMLButtonElement) {
           toggle.setAttribute("aria-pressed", String(translated));
@@ -86,18 +98,18 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).to
           );
         }
 
-        if (label) {
-          label.textContent = translated ? "EN" : "TR";
+        if (enOption) {
+          enOption.classList.toggle("is-active", !translated);
+        }
+
+        if (trOption) {
+          trOption.classList.toggle("is-active", translated);
         }
       }
 
       function applyLanguage(language, options = {}) {
         const nextLanguage = language === TARGET_LANGUAGE ? TARGET_LANGUAGE : SOURCE_LANGUAGE;
         const shouldReload = options.reload === true;
-
-        try {
-          window.sessionStorage.setItem(TRANSLATE_STORAGE_KEY, nextLanguage);
-        } catch {}
 
         setTranslateCookie(nextLanguage);
         document.documentElement.lang = SOURCE_LANGUAGE;
@@ -108,17 +120,13 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).to
         }
       }
 
-      function getStoredLanguage() {
-        try {
-          return window.sessionStorage.getItem(TRANSLATE_STORAGE_KEY);
-        } catch {
-          return null;
-        }
-      }
-
-      function clearLegacyPreference() {
+      function clearLegacyPreferences() {
         try {
           window.localStorage.removeItem("preferred-language");
+        } catch {}
+
+        try {
+          window.sessionStorage.removeItem("preferred-language-session");
         } catch {}
       }
 
@@ -131,7 +139,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).to
 
         toggle.dataset.translateBound = "true";
         toggle.addEventListener("click", () => {
-          const currentLanguage = getStoredLanguage() === TARGET_LANGUAGE ? TARGET_LANGUAGE : SOURCE_LANGUAGE;
+          const currentLanguage = getCurrentLanguage();
           const nextLanguage = currentLanguage === TARGET_LANGUAGE ? SOURCE_LANGUAGE : TARGET_LANGUAGE;
           applyLanguage(nextLanguage, { reload: true });
         });
@@ -152,9 +160,8 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).to
         );
       };
 
-      clearLegacyPreference();
-      const preferredLanguage = getStoredLanguage() === TARGET_LANGUAGE ? TARGET_LANGUAGE : SOURCE_LANGUAGE;
-      applyLanguage(preferredLanguage);
+      clearLegacyPreferences();
+      applyLanguage(DEFAULT_LANGUAGE);
 
       if (document.readyState === "loading") {
         document.addEventListener("DOMContentLoaded", initializeTranslationToggle, { once: true });

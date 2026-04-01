@@ -30,9 +30,11 @@ const nav = [
         type="button"
         data-translate-toggle
         aria-pressed="false"
-        aria-label="Toggle Turkish translation"
+        aria-label="Switch between English and Turkish translation"
       >
-        <span class="translate-toggle__label" data-translate-label>TR</span>
+        <span class="translate-toggle__option" data-translate-option="en">EN</span>
+        <span class="translate-toggle__divider" aria-hidden="true">/</span>
+        <span class="translate-toggle__option is-active" data-translate-option="tr">TR</span>
       </button>
     </nav>
   </div>
@@ -95,8 +97,8 @@ const nav = [
     display:inline-flex;
     align-items:center;
     justify-content:center;
-    min-width: 3.35rem;
-    padding: .45rem .8rem;
+    gap: .35rem;
+    padding: .45rem .75rem;
     border-radius: 999px;
     border: 1px solid var(--border);
     background: color-mix(in srgb, var(--surface) 90%, transparent);
@@ -118,8 +120,15 @@ const nav = [
     border-color: transparent;
     color: white;
   }
-  .translate-toggle__label{
+  .translate-toggle__option{
     line-height: 1;
+    opacity: .6;
+  }
+  .translate-toggle__option.is-active{
+    opacity: 1;
+  }
+  .translate-toggle__divider{
+    opacity: .5;
   }
   @media (max-width: 760px){
     .inner{ align-items:flex-start; flex-direction: column; }
