@@ -6,7 +6,7 @@ description: About Omer Yildiran.
 
 ## About
 
-I’m **Omer Yildiran**, a PhD candidate in Cognition & Perception at NYU. I’m interested in how humans estimate time and integrate information across senses, especially under uncertainty.
+I’m <span class="notranslate" translate="no"><strong>Omer Yildiran</strong></span>, a PhD candidate in Cognition & Perception at NYU. I’m interested in how humans estimate time and integrate information across senses, especially under uncertainty.
 
 ### Research interests
 
@@ -22,4 +22,3 @@ This website is built to be:
 - **easy to edit** (Markdown content + small components)
 - **math-friendly** (KaTeX via Markdown plugins)
 - **static-hostable** (pre-rendered HTML)
-

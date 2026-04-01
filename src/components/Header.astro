@@ -15,7 +15,7 @@ const nav = [
   <div class="container wide inner">
     <a class="brand" href="/" aria-label="Homepage">
       <span class="dot" aria-hidden="true"></span>
-      <span class="name"><slot name="name" /></span>
+      <span class="name notranslate" translate="no"><slot name="name" /></span>
     </a>
 
     <nav class="nav" aria-label="Primary">
@@ -25,17 +25,24 @@ const nav = [
         </a>
       ))}
 
-      <button
-        class="translate-toggle"
-        type="button"
-        data-translate-toggle
-        aria-pressed="false"
-        aria-label="Switch between English and Turkish translation"
-      >
-        <span class="translate-toggle__option" data-translate-option="en">EN</span>
-        <span class="translate-toggle__divider" aria-hidden="true">/</span>
-        <span class="translate-toggle__option is-active" data-translate-option="tr">TR</span>
-      </button>
+      <div class="translate-toggle" role="group" aria-label="Language switcher">
+        <button
+          class="translate-toggle__button"
+          type="button"
+          data-translate-button="en"
+          aria-pressed="true"
+        >
+          EN
+        </button>
+        <button
+          class="translate-toggle__button"
+          type="button"
+          data-translate-button="tr"
+          aria-pressed="false"
+        >
+          TR
+        </button>
+      </div>
     </nav>
   </div>
 </header>
@@ -97,38 +104,34 @@ const nav = [
     display:inline-flex;
     align-items:center;
     justify-content:center;
-    gap: .35rem;
-    padding: .45rem .75rem;
     border-radius: 999px;
     border: 1px solid var(--border);
     background: color-mix(in srgb, var(--surface) 90%, transparent);
+    padding: .2rem;
+  }
+  .translate-toggle__button{
+    appearance: none;
+    border: 0;
+    background: transparent;
     color: var(--text);
     font: inherit;
     font-size: .88rem;
     font-weight: 700;
     letter-spacing: .06em;
-    cursor: pointer;
-    transition: background .2s ease, border-color .2s ease, color .2s ease, transform .2s ease;
-  }
-  .translate-toggle:hover{
-    background: var(--surface);
-    border-color: color-mix(in srgb, var(--brand) 28%, var(--border));
-    transform: translateY(-1px);
-  }
-  .translate-toggle[aria-pressed="true"]{
-    background: linear-gradient(135deg, var(--brand), var(--brand-2));
-    border-color: transparent;
-    color: white;
-  }
-  .translate-toggle__option{
     line-height: 1;
-    opacity: .6;
+    cursor: pointer;
+    padding: .32rem .62rem;
+    border-radius: 999px;
+    opacity: .65;
+    transition: background .2s ease, color .2s ease, opacity .2s ease;
   }
-  .translate-toggle__option.is-active{
+  .translate-toggle__button:hover{
     opacity: 1;
   }
-  .translate-toggle__divider{
-    opacity: .5;
+  .translate-toggle__button[aria-pressed="true"]{
+    background: linear-gradient(135deg, var(--brand), var(--brand-2));
+    color: white;
+    opacity: 1;
   }
   @media (max-width: 760px){
     .inner{ align-items:flex-start; flex-direction: column; }

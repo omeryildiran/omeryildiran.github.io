@@ -57,9 +57,9 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).to
     <Footer />
 
     <script is:inline>
+      const TRANSLATE_SESSION_KEY = "translate-language";
       const SOURCE_LANGUAGE = "en";
       const TARGET_LANGUAGE = "tr";
-      const DEFAULT_LANGUAGE = SOURCE_LANGUAGE;
 
       function setTranslateCookie(language) {
         const value = language === TARGET_LANGUAGE
@@ -84,26 +84,30 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).to
           : SOURCE_LANGUAGE;
       }
 
+      function setSessionLanguage(language) {
+        try {
+          window.sessionStorage.setItem(TRANSLATE_SESSION_KEY, language);
+        } catch {}
+      }
+
+      function getSessionLanguage() {
+        try {
+          return window.sessionStorage.getItem(TRANSLATE_SESSION_KEY);
+        } catch {
+          return null;
+        }
+      }
+
       function updateToggle(language) {
-        const toggle = document.querySelector("[data-translate-toggle]");
-        const translated = language === TARGET_LANGUAGE;
-        const enOption = document.querySelector('[data-translate-option="en"]');
-        const trOption = document.querySelector('[data-translate-option="tr"]');
+        const enButton = document.querySelector('[data-translate-button="en"]');
+        const trButton = document.querySelector('[data-translate-button="tr"]');
 
-        if (toggle instanceof HTMLButtonElement) {
-          toggle.setAttribute("aria-pressed", String(translated));
-          toggle.setAttribute(
-            "aria-label",
-            translated ? "Switch site back to English" : "Translate site to Turkish"
-          );
+        if (enButton instanceof HTMLButtonElement) {
+          enButton.setAttribute("aria-pressed", String(language !== TARGET_LANGUAGE));
         }
 
-        if (enOption) {
-          enOption.classList.toggle("is-active", !translated);
-        }
-
-        if (trOption) {
-          trOption.classList.toggle("is-active", translated);
+        if (trButton instanceof HTMLButtonElement) {
+          trButton.setAttribute("aria-pressed", String(language === TARGET_LANGUAGE));
         }
       }
 
@@ -131,17 +135,25 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).to
       }
 
       function initializeTranslationToggle() {
-        const toggle = document.querySelector("[data-translate-toggle]");
+        const buttons = document.querySelectorAll("[data-translate-button]");
 
-        if (!(toggle instanceof HTMLButtonElement) || toggle.dataset.translateBound === "true") {
+        if (!buttons.length) {
           return;
         }
 
-        toggle.dataset.translateBound = "true";
-        toggle.addEventListener("click", () => {
-          const currentLanguage = getCurrentLanguage();
-          const nextLanguage = currentLanguage === TARGET_LANGUAGE ? SOURCE_LANGUAGE : TARGET_LANGUAGE;
-          applyLanguage(nextLanguage, { reload: true });
+        buttons.forEach((button) => {
+          if (!(button instanceof HTMLButtonElement) || button.dataset.translateBound === "true") {
+            return;
+          }
+
+          button.dataset.translateBound = "true";
+          button.addEventListener("click", () => {
+            const nextLanguage = button.dataset.translateButton === TARGET_LANGUAGE
+              ? TARGET_LANGUAGE
+              : SOURCE_LANGUAGE;
+            setSessionLanguage(nextLanguage);
+            applyLanguage(nextLanguage, { reload: true });
+          });
         });
       }
 
@@ -161,7 +173,9 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).to
       };
 
       clearLegacyPreferences();
-      applyLanguage(DEFAULT_LANGUAGE);
+      const sessionLanguage = getSessionLanguage();
+      const initialLanguage = sessionLanguage === TARGET_LANGUAGE ? TARGET_LANGUAGE : SOURCE_LANGUAGE;
+      applyLanguage(initialLanguage);
 
       if (document.readyState === "loading") {
         document.addEventListener("DOMContentLoaded", initializeTranslationToggle, { once: true });
@@ -189,6 +203,9 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).to
   :global(.skiptranslate),
   :global(.goog-te-banner-frame){
     display: none !important;
+  }
+  :global(.notranslate){
+    unicode-bidi: isolate;
   }
   .main{
     padding: 1.6rem 0 0;
