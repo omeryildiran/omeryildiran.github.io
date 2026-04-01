@@ -57,7 +57,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).to
     <Footer />
 
     <script is:inline>
-      const TRANSLATE_STORAGE_KEY = "preferred-language";
+      const TRANSLATE_STORAGE_KEY = "preferred-language-session";
       const SOURCE_LANGUAGE = "en";
       const TARGET_LANGUAGE = "tr";
 
@@ -65,12 +65,11 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).to
         const value = language === TARGET_LANGUAGE
           ? `/${SOURCE_LANGUAGE}/${TARGET_LANGUAGE}`
           : `/${SOURCE_LANGUAGE}/${SOURCE_LANGUAGE}`;
-        const maxAge = 60 * 60 * 24 * 365;
 
-        document.cookie = `googtrans=${value};path=/;max-age=${maxAge}`;
+        document.cookie = `googtrans=${value};path=/`;
 
         if (window.location.hostname.includes(".")) {
-          document.cookie = `googtrans=${value};domain=${window.location.hostname};path=/;max-age=${maxAge}`;
+          document.cookie = `googtrans=${value};domain=${window.location.hostname};path=/`;
         }
       }
 
@@ -97,11 +96,11 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).to
         const shouldReload = options.reload === true;
 
         try {
-          window.localStorage.setItem(TRANSLATE_STORAGE_KEY, nextLanguage);
+          window.sessionStorage.setItem(TRANSLATE_STORAGE_KEY, nextLanguage);
         } catch {}
 
         setTranslateCookie(nextLanguage);
-        document.documentElement.lang = nextLanguage;
+        document.documentElement.lang = SOURCE_LANGUAGE;
         updateToggle(nextLanguage);
 
         if (shouldReload) {
@@ -111,10 +110,16 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).to
 
       function getStoredLanguage() {
         try {
-          return window.localStorage.getItem(TRANSLATE_STORAGE_KEY);
+          return window.sessionStorage.getItem(TRANSLATE_STORAGE_KEY);
         } catch {
           return null;
         }
+      }
+
+      function clearLegacyPreference() {
+        try {
+          window.localStorage.removeItem("preferred-language");
+        } catch {}
       }
 
       function initializeTranslationToggle() {
@@ -147,6 +152,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).to
         );
       };
 
+      clearLegacyPreference();
       const preferredLanguage = getStoredLanguage() === TARGET_LANGUAGE ? TARGET_LANGUAGE : SOURCE_LANGUAGE;
       applyLanguage(preferredLanguage);
 
