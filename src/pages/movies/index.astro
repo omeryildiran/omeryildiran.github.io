@@ -15,6 +15,11 @@ const watchedPath = path.resolve(
 );
 const diaryCsv = await fs.readFile(diaryPath, "utf-8");
 const watchedCsv = await fs.readFile(watchedPath, "utf-8");
+const reviewsPath = path.resolve(
+  process.cwd(),
+  "use_these_ai/letterboxd_export_oyildiran/reviews.csv"
+);
+const reviewsCsv = await fs.readFile(reviewsPath, "utf-8");
 
 function parseCsv(text) {
   // Minimal CSV parser for Letterboxd exports (handles quoted commas).
@@ -89,6 +94,7 @@ function buildFromWatched(csvText) {
 
 const diaryMoviesRaw = buildFromDiary(diaryCsv);
 const watchedMoviesRaw = buildFromWatched(watchedCsv);
+const reviewMoviesRaw = buildFromDiary(reviewsCsv);
 
 const posterDir = path.resolve(process.cwd(), "public/assets/movies/posters");
 
@@ -162,10 +168,18 @@ for (const m of diaryMoviesRaw) {
   const key = movieKey(m);
   if (!key) continue;
   diaryByKey.set(key, {
+    letterboxdUri: m.letterboxdUri ?? "",
     rating: m.rating,
     watchedDate: m.watchedDate ?? "",
     watchedDateIso: toIsoDate(m.watchedDate ?? "")
   });
+}
+
+const reviewUriByKey = new Map();
+for (const m of reviewMoviesRaw) {
+  const key = movieKey(m);
+  if (!key) continue;
+  reviewUriByKey.set(key, m.letterboxdUri ?? "");
 }
 
 const watchedByKey = new Map();
@@ -188,6 +202,7 @@ const movies = await Promise.all(
   Array.from(watchedByKey.values()).map(async (m) => {
     const key = movieKey(m);
     const diary = diaryByKey.get(key);
+    const reviewUri = reviewUriByKey.get(key) ?? "";
     const { id, poster } = await posterFor(m.letterboxdUri);
     const watchedDisplay = diary?.watchedDate || m.watchedDate || "";
     const watchedIso = diary?.watchedDateIso || toIsoDate(m.watchedDate ?? "");
@@ -200,7 +215,8 @@ const movies = await Promise.all(
       watchedDate: watchedDisplay,
       watchedDateIso: watchedIso,
       countries,
-      diaryRated: diary?.rating != null
+      diaryRated: diary?.rating != null,
+      entryUri: reviewUri || diary?.letterboxdUri || m.letterboxdUri
     };
   })
 );
@@ -255,7 +271,7 @@ const favoriteMovies = movies
       <div class="favoritesGrid">
         {favoriteMovies.map((m, index) => (
           <article class="favoriteCard">
-            <a class="favoritePoster" href={m.letterboxdUri} target="_blank" rel="noopener">
+            <a class="favoritePoster" href={m.entryUri} target="_blank" rel="noopener">
               {m.poster ? (
                 <img loading="lazy" src={m.poster} alt={`${m.name} poster`} />
               ) : (
@@ -385,7 +401,7 @@ const favoriteMovies = movies
         data-diary={m.diaryRated ? "1" : ""}
         data-countries={(m.countries ?? []).join(",")}
       >
-        <a class="poster" href={m.letterboxdUri} target="_blank" rel="noopener">
+        <a class="poster" href={m.entryUri} target="_blank" rel="noopener">
           {m.poster ? (
             <img loading="lazy" src={m.poster} alt={`${m.name} poster`} />
           ) : (
@@ -726,14 +742,11 @@ const favoriteMovies = movies
       list.forEach((c) => counts.set(c, (counts.get(c) ?? 0) + 1));
     });
     const values = {};
-    const maxCount = Math.max(...counts.values(), 1);
-    const maxLog = Math.log1p(maxCount);
     // Use svgMap's built-in `link` handling for clicks. We'll read the hash and
     // apply filtering on `hashchange`.
     counts.forEach((n, c) => {
       values[c] = {
-        total: maxLog > 0 ? Math.log1p(n) / maxLog : 0,
-        rawTotal: n,
+        total: n,
         link: `#country=${encodeURIComponent(c)}`
       };
     });
@@ -762,11 +775,11 @@ const favoriteMovies = movies
         colorMin: "#93c5fd",
         colorMax: "#1d4ed8",
         colorNoData: "#e2e8f0",
+        ratioType: "log",
         touchLink: true,
         data: {
           data: {
-            total: { name: "Movies" },
-            rawTotal: { name: "Movies" }
+            total: { name: "Movies" }
           },
           applyData: "total",
           values
