@@ -26,6 +26,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).to
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
+    <meta name="google" content="notranslate" />
     <link rel="canonical" href={canonical} />
 
     <title>{title}</title>
@@ -41,6 +42,8 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).to
     <link rel="alternate" type="application/rss+xml" title={`${site.name} RSS`} href="/rss.xml" />
   </head>
   <body>
+    <div id="google_translate_element" class="translate-widget" aria-hidden="true"></div>
+
     <Header>
       <span slot="name">{site.name}</span>
     </Header>
@@ -52,10 +55,128 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).to
     </main>
 
     <Footer />
+
+    <script is:inline>
+      const TRANSLATE_STORAGE_KEY = "preferred-language";
+      const SOURCE_LANGUAGE = "en";
+      const TARGET_LANGUAGE = "tr";
+
+      function setTranslateCookie(language) {
+        const value = language === TARGET_LANGUAGE
+          ? `/${SOURCE_LANGUAGE}/${TARGET_LANGUAGE}`
+          : `/${SOURCE_LANGUAGE}/${SOURCE_LANGUAGE}`;
+        const maxAge = 60 * 60 * 24 * 365;
+
+        document.cookie = `googtrans=${value};path=/;max-age=${maxAge}`;
+
+        if (window.location.hostname.includes(".")) {
+          document.cookie = `googtrans=${value};domain=${window.location.hostname};path=/;max-age=${maxAge}`;
+        }
+      }
+
+      function updateToggle(language) {
+        const toggle = document.querySelector("[data-translate-toggle]");
+        const label = document.querySelector("[data-translate-label]");
+        const translated = language === TARGET_LANGUAGE;
+
+        if (toggle instanceof HTMLButtonElement) {
+          toggle.setAttribute("aria-pressed", String(translated));
+          toggle.setAttribute(
+            "aria-label",
+            translated ? "Switch site back to English" : "Translate site to Turkish"
+          );
+        }
+
+        if (label) {
+          label.textContent = translated ? "EN" : "TR";
+        }
+      }
+
+      function applyLanguage(language, options = {}) {
+        const nextLanguage = language === TARGET_LANGUAGE ? TARGET_LANGUAGE : SOURCE_LANGUAGE;
+        const shouldReload = options.reload === true;
+
+        try {
+          window.localStorage.setItem(TRANSLATE_STORAGE_KEY, nextLanguage);
+        } catch {}
+
+        setTranslateCookie(nextLanguage);
+        document.documentElement.lang = nextLanguage;
+        updateToggle(nextLanguage);
+
+        if (shouldReload) {
+          window.location.reload();
+        }
+      }
+
+      function getStoredLanguage() {
+        try {
+          return window.localStorage.getItem(TRANSLATE_STORAGE_KEY);
+        } catch {
+          return null;
+        }
+      }
+
+      function initializeTranslationToggle() {
+        const toggle = document.querySelector("[data-translate-toggle]");
+
+        if (!(toggle instanceof HTMLButtonElement) || toggle.dataset.translateBound === "true") {
+          return;
+        }
+
+        toggle.dataset.translateBound = "true";
+        toggle.addEventListener("click", () => {
+          const currentLanguage = getStoredLanguage() === TARGET_LANGUAGE ? TARGET_LANGUAGE : SOURCE_LANGUAGE;
+          const nextLanguage = currentLanguage === TARGET_LANGUAGE ? SOURCE_LANGUAGE : TARGET_LANGUAGE;
+          applyLanguage(nextLanguage, { reload: true });
+        });
+      }
+
+      window.googleTranslateElementInit = () => {
+        if (!(window.google && window.google.translate && window.google.translate.TranslateElement)) {
+          return;
+        }
+
+        new window.google.translate.TranslateElement(
+          {
+            pageLanguage: SOURCE_LANGUAGE,
+            includedLanguages: TARGET_LANGUAGE,
+            autoDisplay: false
+          },
+          "google_translate_element"
+        );
+      };
+
+      const preferredLanguage = getStoredLanguage() === TARGET_LANGUAGE ? TARGET_LANGUAGE : SOURCE_LANGUAGE;
+      applyLanguage(preferredLanguage);
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initializeTranslationToggle, { once: true });
+      } else {
+        initializeTranslationToggle();
+      }
+    </script>
+    <script is:inline src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
   </body>
 </html>
 
 <style>
+  body{
+    top: 0 !important;
+  }
+  .translate-widget{
+    position: absolute;
+    inset: 0 auto auto 0;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+  }
+  :global(.skiptranslate),
+  :global(.goog-te-banner-frame){
+    display: none !important;
+  }
   .main{
     padding: 1.6rem 0 0;
   }
@@ -75,4 +196,3 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).to
     .prose{ padding: 1.1rem 1rem 1.25rem; }
   }
 </style>
-
