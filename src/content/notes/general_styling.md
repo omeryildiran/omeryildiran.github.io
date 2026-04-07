@@ -258,4 +258,4 @@ setup_style()
 
 Final Takeaway
 
-A good figure styling system is not about aesthetics, it is more about readability and being perfectionist. It is about making sure that the reader can focus on the data and the story, without being distracted by inconsistencies or formatting issues. By defining a clear and consistent style for all figures in a paper, we can enhance the clarity and professionalism of our work, and make it easier for others to understand and reproduce our results.
+A good figure styling system is not about aesthetics, it is more about readability and being perfectionist. It is about making sure that the reader can focus on the data and the story, without being distracted by inconsistencies or formatting issues. By defining a clear and consistent style for all figures in a paper, we can enhance the clarity and professionalism of our work, and make it easier for others to understand and reproduce our results (As if they care about that, but still :D).
