@@ -1,6 +1,6 @@
 ---
-title: "A Reproducible Figure Styling System for Scientific Papers"
-description: "What I learned from standardizing figures for my first manuscript — and the simple Python file that fixed it."
+title: "A reproducible figure styling system"
+description: "What I learned from standardizing figures for my first article."
 slug: "reproducible-figure-styling"
 date: 2026-04-06
 tags: [python, matplotlib, research, tutorial]
@@ -8,10 +8,11 @@ tags: [python, matplotlib, research, tutorial]
 
 One of the most frustrating parts of writing my first paper wasn't the modeling or the analysis. It was figure consistency.
 
-The same issues kept coming back: panel labels slightly different across figures, font sizes not quite matching, small inconsistencies I'd only notice late at night before a deadline. And then — manual fixes in Illustrator that broke reproducibility the next time I regenerated the figure.
+The same issues kept coming back: panel labels slightly different across figures, font sizes not quite matching, small inconsistencies. And then — manual fixes in Adobe Illustrator that broke reproducibility the next time I regenerated the figure.
 
 None of this affected the science. But it slowed everything down.
 
+Because of all the issues and headaches, I decided to create a guideline for future me and anyone else who thinks they are clumsy or attention deficient with figure styling and/or writing.
 I hope the follwing system will help me and others avoid that headache in the future. In theory using this kind of setup should make article publishing much smoother, but as I have only gone through it once, I can't say for sure yet. I will see how it goes with the next paper, otherwise I might have to leave academia and become a barista :)
 
 > Define all figure styling once in code, and never touch it manually again.
@@ -37,7 +38,7 @@ setup_style()
 
 That's it. No local styling unless there's a very specific reason.
 
-You can grab the full file here: [plot_style.py](/assets/codes/plot_style.py)
+You can grab the full file here: [plot_style.py](/assets/codes/plot_style.py){download}
 
 Or see the complete code at the bottom of this post.
 
