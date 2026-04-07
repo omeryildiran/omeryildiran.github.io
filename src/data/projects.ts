@@ -1,6 +1,7 @@
 export type ProjectDemo =
   | {
       title: string;
+      href?: string;
       chips?: { label: string; href: string }[];
       embed: {
         kind: "iframe";
@@ -11,6 +12,7 @@ export type ProjectDemo =
     }
   | {
       title: string;
+      href?: string;
       chips?: { label: string; href: string }[];
       embed: {
         kind: "image";
@@ -21,7 +23,28 @@ export type ProjectDemo =
 
 export const projectDemos: ProjectDemo[] = [
   {
+    title: "Duration Judgments with Conflicting Audiovisual Cues",
+    href: "/notes/audiovisual-duration/",
+    chips: [
+      { label: "Project page", href: "/notes/audiovisual-duration/" },
+      {
+        label: "Psychometric fits",
+        href: "/assets/docs/audiovisual-duration/pooled-psychometric-functions.pdf"
+      },
+      {
+        label: "Model comparison",
+        href: "/assets/docs/audiovisual-duration/aggregated-mu-vs-models.pdf"
+      }
+    ],
+    embed: {
+      kind: "image",
+      src: "/assets/images/audiovisual-duration/thumbnail.png",
+      alt: "Unimodal auditory and visual task figure"
+    }
+  },
+  {
     title: "Role of Expectation on Perceived Time of Visual Events",
+    href: "https://drive.google.com/file/d/1dQwQV8OmORSYC_rPqAxFgNsVfJpEPzGI/view?usp=sharing",
     embed: {
       kind: "iframe",
       src: "https://www.youtube.com/embed/ToUp1I11ml4",
@@ -33,6 +56,7 @@ export const projectDemos: ProjectDemo[] = [
   {
     title:
       "Unsupervised learning can predict properties of non-rigid mirror objects in ambiguous conditions",
+    href: "https://doi.org/10.1167/jov.23.9.5026",
     embed: {
       kind: "iframe",
       src: "https://drive.google.com/file/d/1tMBHr-U8ospn7wwUgo_KK0J-nJXNzOsJ/preview",
@@ -43,6 +67,7 @@ export const projectDemos: ProjectDemo[] = [
   },
   {
     title: "Parchment Skin Illusion for Haptic Perception of Viscous Materials",
+    href: "https://www.notion.so/Multimodal-Material-Perception-METU-Sense-24e2bba710ec4669ad13e8981f75cd40?pvs=21",
     chips: [
       {
         label: "Github Repo",
@@ -67,6 +92,7 @@ export const projectDemos: ProjectDemo[] = [
   },
   {
     title: "Investigating the Role of Auditory Cues that Create Expectation Effect for Visual Targets",
+    href: "https://run.pavlovia.org/omer/audio-visual-expectation/",
     chips: [
       { label: "Github Repo", href: "https://github.com/omeryildiran/Audio-Visual-Expectation-" },
       { label: "PsychoPy Demo", href: "https://run.pavlovia.org/omer/audio-visual-expectation/" },
@@ -82,6 +108,7 @@ export const projectDemos: ProjectDemo[] = [
   },
   {
     title: "George Viau's Collection: A Computational Approach",
+    href: "https://odhn.ens.psl.eu/en/article/george-viau-major-collector-impressionism-and-post-impressionism",
     chips: [
       {
         label: "Project Article",
@@ -149,4 +176,3 @@ export const researchProjects = [
     ]
   }
 ] as const;
-

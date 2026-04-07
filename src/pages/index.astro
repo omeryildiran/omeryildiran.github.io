@@ -87,7 +87,7 @@ import { projectDemos } from "../data/projects";
       {projectDemos.map((p) => (
         <section class="project card reveal">
           <h3>
-            {p.title}
+            {p.href ? <a class="project-title-link" href={p.href}>{p.title}</a> : p.title}
           </h3>
           <div class="project-chips">
             {p.chips?.map((c) => (
@@ -162,6 +162,15 @@ import { projectDemos } from "../data/projects";
   .projects{ display:grid; grid-template-columns: repeat(2, 1fr); gap: .9rem; }
   .project{ padding: 1rem; }
   .project h3{ margin: .1rem 0 .6rem; font-size: 1.15rem; }
+  .project-title-link{
+    color: inherit;
+    text-decoration: none;
+  }
+  .project-title-link:hover{
+    color: var(--brand);
+    text-decoration: underline;
+    text-underline-offset: 0.12em;
+  }
   .project-chips{ display:flex; flex-wrap: wrap; gap:.4rem; margin-bottom: .75rem; }
   .media{
     border-radius: 12px;
